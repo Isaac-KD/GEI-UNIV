@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 2 MATHS — Séries, Intégrales & Convergence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #f87171;   /* rouge     — Séries numériques */
+    --c2: #34d399;   /* vert      — Intégrales généralisées */
+    --c3: #818cf8;   /* indigo    — Séries entières */
+    --c4: #fb923c;   /* orange    — Convergence uniforme */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#130a0a 0%,#15151f 55%,#0d130f 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(248,113,113,.1) 0%,rgba(52,211,153,.07) 55%,transparent 75%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(248,113,113,.3);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c2); border:1px solid rgba(52,211,153,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#fca5a5 0%,#6ee7b7 35%,#c7d2fe 65%,#fed7aa 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s} .section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s} .section:nth-child(4){animation-delay:.15s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(248,113,113,.07); border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(52,211,153,.07);  border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(129,140,248,.07); border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(251,146,60,.07);  border-left:3px solid var(--c4)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .sub-eq { margin-left:1.2rem; border-left:2px dashed rgba(255,255,255,.1); padding-left:1rem; display:flex; flex-direction:column; gap:.5rem; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+  .trap ul { padding-left:1.2rem; } .trap ul li { margin-bottom:.3rem; }
+
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+  .hack-box ul,.hack-box ol { padding-left:1.3rem; color:#f0d898; } .hack-box li { margin-bottom:.3rem; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(248,113,113,.15); color:var(--c1)}
+  .s2 .def-term{background:rgba(52,211,153,.15);  color:var(--c2)}
+  .s3 .def-term{background:rgba(129,140,248,.15); color:var(--c3)}
+  .s4 .def-term{background:rgba(251,146,60,.15);  color:var(--c4)}
+
+  /* Checklist arbre de décision */
+  .checklist { display:flex; flex-direction:column; gap:.6rem; }
+  .check-step { border-radius:8px; padding:.85rem 1rem; border:1px solid var(--border); background:rgba(0,0,0,.2); display:grid; grid-template-columns:1.6rem 1fr; gap:.7rem; align-items:start; }
+  .check-num { font-family:var(--mono); font-size:.75rem; font-weight:700; color:var(--c1); background:rgba(248,113,113,.15); border-radius:50%; width:1.6rem; height:1.6rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.1rem; }
+  .check-body { display:flex; flex-direction:column; gap:.35rem; }
+  .check-label { font-weight:600; color:var(--text); font-size:.95rem; }
+  .check-sub { display:flex; flex-direction:column; gap:.35rem; padding-left:.8rem; border-left:2px dashed rgba(255,255,255,.1); margin-top:.2rem; font-size:.9rem; color:#c8d0e0; }
+  .check-sub .sub-label { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+
+  /* D'Alembert decision */
+  .dalembert-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.6rem; margin-top:.3rem; }
+  .dal-case { border-radius:7px; padding:.6rem .8rem; text-align:center; font-size:.88rem; }
+  .dal-ok   { background:rgba(52,211,153,.1);  border:1px solid rgba(52,211,153,.25); color:#6ee7b7; }
+  .dal-ko   { background:rgba(248,113,113,.1); border:1px solid rgba(248,113,113,.25); color:#fca5a5; }
+  .dal-unk  { background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.25); color:#fcd34d; }
+  .dal-case .dal-cond { font-family:var(--mono); font-weight:700; font-size:.9rem; display:block; margin-bottom:.15rem; }
+
+  /* Miroir table */
+  .mirror-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  .mirror-table th { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; padding:.55rem .9rem; text-align:left; border-bottom:2px solid var(--border); color:var(--muted); }
+  .mirror-table td { padding:.6rem .9rem; border-bottom:1px solid rgba(255,255,255,.05); color:#c2c9db; vertical-align:middle; }
+  .mirror-table tr:last-child td { border-bottom:none; }
+  .mirror-table td:first-child { font-weight:600; color:var(--text); white-space:nowrap; }
+
+  /* Rayon décision */
+  .rayon-tree { display:flex; flex-direction:column; gap:.5rem; }
+  .r-case { border-radius:7px; padding:.65rem .9rem; display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:start; }
+  .r-conv  { background:rgba(52,211,153,.08);  border:1px solid rgba(52,211,153,.22); }
+  .r-div   { background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.22); }
+  .r-unk   { background:rgba(251,191,36,.06);  border:1px solid rgba(251,191,36,.22); }
+  .r-badge { font-family:var(--mono); font-size:.78rem; font-weight:700; padding:.2rem .55rem; border-radius:4px; white-space:nowrap; align-self:start; margin-top:.1rem; }
+  .r-conv  .r-badge { background:rgba(52,211,153,.18);  color:#6ee7b7; }
+  .r-div   .r-badge { background:rgba(248,113,113,.18); color:#fca5a5; }
+  .r-unk   .r-badge { background:rgba(251,191,36,.15);  color:#fcd34d; }
+  .r-body  { font-size:.9rem; color:#c2c9db; } .r-body strong { color:var(--text); }
+
+  /* Convergence uniforme hacks */
+  .cu-list { display:flex; flex-direction:column; gap:.55rem; }
+  .cu-item { border-radius:7px; padding:.7rem .95rem; background:rgba(251,146,60,.06); border:1px solid rgba(251,146,60,.2); font-size:.9rem; color:#f0d898; display:grid; grid-template-columns:1.5rem 1fr; gap:.7rem; align-items:start; }
+  .cu-num { font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--c4); background:rgba(251,146,60,.15); border-radius:50%; width:1.5rem; height:1.5rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.1rem; }
+  .cu-text strong { color:#fcd7aa; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} .dalembert-grid{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../../index.html" class="home-btn">← Accueil</a>
+  <style>
+    header {
+      position: relative;
+    }
+
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      color: white;
+      text-decoration: none;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+  <div class="bloc-tag">Bloc 2 Maths · Auto-suffisant</div><span class="version-badge">Cœur du sujet</span>
+  <h1>Séries, Intégrales &amp; Convergence</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(248,113,113,.3)">01 · Séries Numériques</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(52,211,153,.3)">02 · Intégrales Généralisées</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(129,140,248,.3)">03 · Séries Entières</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(251,146,60,.3)">04 · Convergence Uniforme</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Séries Numériques — Le Boss des QCM</h2><span class="icon">∑</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le GEI-UNIV adore donner une série \(\sum u_n\) et demander si elle converge. <strong>4 à 6 questions par an</strong> (soit 20–30% de la note en maths) portent sur ce sujet. Sans l'arbre de décision ci-dessous, impossible de répondre à un tiers du sujet de maths.</p>
+      <p>La méthode est toujours la même : on descend la checklist dans l'ordre jusqu'à trouver le critère applicable.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">La Checklist Infaillible — Arbre de décision</div>
+      <div class="checklist">
+
+        <div class="check-step">
+          <div class="check-num">1</div>
+          <div class="check-body">
+            <div class="check-label">Condition nécessaire — Test préliminaire</div>
+            <div class="eq">\(\lim_{n \to \infty} u_n = 0 \; ?\)</div>
+            <div class="annot">Si cette limite est <strong>non nulle ou n'existe pas</strong> → <strong>Divergence Grossière</strong> immédiate. Pas besoin d'aller plus loin.</div>
+          </div>
+        </div>
+
+        <div class="check-step">
+          <div class="check-num">2</div>
+          <div class="check-body">
+            <div class="check-label">Séries à termes positifs (\(u_n \ge 0\))</div>
+            <div class="check-sub">
+              <div>
+                <div class="sub-label">Critère de Riemann — LE PLUS IMPORTANT</div>
+                <div class="eq hl" style="margin-top:.3rem">\(\sum \frac{1}{n^\alpha} \;\text{converge} \iff \alpha > 1\)</div>
+                <div class="annot" style="margin-top:.3rem">Exemples : \(1/n^2\) → converge (\(\alpha=2>1\)) ; \(1/\sqrt{n}\) → diverge (\(\alpha=1/2<1\)) ; \(1/n\) (harmonique) → diverge (\(\alpha=1\)).</div>
+              </div>
+              <div style="margin-top:.4rem">
+                <div class="sub-label">Critère d'équivalence — Hack DL</div>
+                <div class="annot-plain" style="font-size:.88rem">Si \(u_n \sim v_n\) en \(+\infty\), alors \(\sum u_n\) et \(\sum v_n\) ont la <strong>même nature</strong>. Utilise les DL pour trouver l'équivalent ! Exemple : \(u_n = \ln\!\left(1+\frac{1}{n^2}\right) \sim \frac{1}{n^2}\) → Riemann \(\alpha=2>1\) → <em>Converge</em>.</div>
+              </div>
+              <div style="margin-top:.4rem">
+                <div class="sub-label">Critère de d'Alembert — Pour les factorielles et exponentielles</div>
+                <div class="eq hl" style="margin-top:.3rem">\(L = \lim_{n \to \infty} \left|\frac{u_{n+1}}{u_n}\right|\)</div>
+                <div class="dalembert-grid" style="margin-top:.5rem">
+                  <div class="dal-case dal-ok"><span class="dal-cond">\(L < 1\)</span>Converge</div>
+                  <div class="dal-case dal-ko"><span class="dal-cond">\(L > 1\)</span>Diverge</div>
+                  <div class="dal-case dal-unk"><span class="dal-cond">\(L = 1\)</span>Inconclus — utilise Riemann</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="check-step">
+          <div class="check-num">3</div>
+          <div class="check-body">
+            <div class="check-label">Séries à termes quelconques — avec \((-1)^n\)</div>
+            <div class="check-sub">
+              <div>
+                <div class="sub-label">Convergence Absolue — Méthode la plus simple</div>
+                <div class="annot-plain" style="font-size:.88rem">Si \(\sum |u_n|\) converge (étudier avec Riemann ou d'Alembert), alors \(\sum u_n\) <strong>converge absolument</strong>. C'est le premier réflexe à avoir.</div>
+              </div>
+              <div style="margin-top:.4rem">
+                <div class="sub-label">Critère des Séries Alternées (CSSA)</div>
+                <div class="eq hl" style="margin-top:.3rem">\(\sum (-1)^n v_n \;\text{converge si :}\; v_n > 0,\; v_n \text{ décroissante},\; v_n \to 0\)</div>
+                <div class="annot" style="margin-top:.3rem">Attention : la convergence n'est <em>pas nécessairement absolue</em>. On parle alors de convergence <strong>semi-convergente</strong> (ex : la série harmonique alternée \(\sum (-1)^n/n\)).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Utilise les DL pour trouver l'équivalent</div>
+      <p>Pour les séries du type \(u_n = f(1/n)\), développe \(f\) en 0 (car \(1/n \to 0\)). Le premier terme non nul du DL donne l'équivalent, puis on applique Riemann.</p>
+      <ul>
+        <li>\(\ln(1 + 1/n^2) \sim 1/n^2\) → Riemann \(\alpha = 2 > 1\) → Converge</li>
+        <li>\(\sin(1/n) \sim 1/n\) → Riemann \(\alpha = 1\) → Diverge</li>
+        <li>\(1 - \cos(1/n) \sim 1/(2n^2)\) → Riemann \(\alpha = 2 > 1\) → Converge</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Intégrales Généralisées — Le Jumeau des Séries</h2><span class="icon">∫</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Les intégrales généralisées sont le <strong>miroir continu</strong> des séries numériques. Les critères sont exactement les mêmes, transposés du discret au continu. Une intégrale est dite <em>généralisée</em> quand la borne d'intégration est infinie, ou quand la fonction diverge en un point de l'intervalle.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Les Critères Miroir</div>
+
+      <table class="mirror-table">
+        <tr>
+          <th>Critère</th>
+          <th>Pour les séries \(\sum u_n\)</th>
+          <th>Pour les intégrales \(\int f\,dt\)</th>
+        </tr>
+        <tr>
+          <td>Riemann en \(+\infty\)</td>
+          <td>\(\sum \frac{1}{n^\alpha}\) converge \(\iff \alpha > 1\)</td>
+          <td>\(\int_1^{+\infty} \frac{dt}{t^\alpha}\) converge \(\iff \alpha > 1\)</td>
+        </tr>
+        <tr>
+          <td>Riemann en \(0\)</td>
+          <td>N/A</td>
+          <td>\(\int_0^1 \frac{dt}{t^\alpha}\) converge \(\iff \alpha < 1\)</td>
+        </tr>
+        <tr>
+          <td>Équivalence</td>
+          <td>Si \(u_n \sim v_n\) → même nature</td>
+          <td>Si \(f(t) \sim g(t)\) à la borne → même nature</td>
+        </tr>
+      </table>
+
+      <div class="annot" style="margin-top:.3rem">⚠ Attention au cas en 0 : le critère est <strong>inversé</strong> par rapport à \(+\infty\). Pour converger en 0, il faut \(\alpha < 1\) (la singularité est "pas trop forte").</div>
+
+      <div class="eq-row" style="margin-top:.4rem">
+        <div class="eq-name-tag">Intégration Par Parties (IPP) — Tombé en 2019 Q5</div>
+        <div class="annot-plain">L'IPP est souvent la clé pour montrer qu'une <strong>intégrale semi-convergente</strong> existe. Exemple : \(\int_1^{+\infty} \frac{\sin t}{t}\,dt\). La fonction n'est pas de signe constant, donc Riemann ne s'applique pas directement. On intègre par parties pour faire apparaître \(\frac{\cos t}{t}\) qui converge, puis on conclut.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Intégrales de Référence — À savoir par cœur</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Intégrale de Gauss</div>
+        <div class="eq hl">\(\int_{-\infty}^{+\infty} e^{-x^2}\,dx = \sqrt{\pi} \qquad \text{et} \qquad \int_0^{+\infty} e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}\)</div>
+        <div class="annot">Ne se calcule pas par les méthodes classiques (pas de primitive élémentaire). Se démontre par passage en polaires. <strong>Résultat à mémoriser directement.</strong></div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Intégrale de Bertrand — Piège classique</div>
+        <div class="eq hl">\(\int_2^{+\infty} \frac{dt}{t^\alpha (\ln t)^\beta}\)</div>
+        <div class="annot-plain" style="margin-top:.3rem">Converge si et seulement si :</div>
+        <div class="def-grid" style="margin-top:.3rem">
+          <span class="def-term">Cas 1</span><span class="def-desc">\(\alpha > 1\) <em>(peu importe \(\beta\))</em> → Converge. Le \(t^\alpha\) domine.</span>
+          <span class="def-term">Cas 2</span><span class="def-desc">\(\alpha = 1\) ET \(\beta > 1\) → Converge. Le \(\ln t\) assure la convergence.</span>
+          <span class="def-term">Sinon</span><span class="def-desc">\(\alpha < 1\), ou \(\alpha = 1\) et \(\beta \leq 1\) → Diverge.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Séries Entières &amp; Rayon de Convergence</h2><span class="icon">🌀</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Une série entière est une série de la forme \(\sum a_n z^n\) (ou \(\sum a_n x^n\) en réel). C'est le pont entre les séries numériques et les fonctions analytiques — les DL usuels ne sont que des séries entières tronquées ! Chaque série entière a un <strong>rayon de convergence \(R\)</strong> qui délimite la zone où elle converge.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Rayon de convergence — Formules dures</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Règle de d'Alembert pour séries entières</div>
+        <div class="eq hl">\(R = \dfrac{1}{\displaystyle\lim_{n \to \infty} \left|\dfrac{a_{n+1}}{a_n}\right|}\)</div>
+        <div class="annot">Si la limite vaut \(L\), alors \(R = 1/L\). Si \(L = 0\) → \(R = +\infty\). Si \(L = +\infty\) → \(R = 0\).</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Propriétés du rayon R — Tombé en 2021 &amp; 2019</div>
+
+      <div class="rayon-tree">
+        <div class="r-case r-conv">
+          <span class="r-badge">|z| &lt; R</span>
+          <div class="r-body"><strong>Convergence absolue.</strong> La série converge absolument à l'intérieur du disque de rayon R. La fonction somme \(S(x)\) est <strong>continue et de classe \(C^\infty\)</strong>. On peut dériver et intégrer terme à terme.</div>
+        </div>
+        <div class="r-case r-div">
+          <span class="r-badge">|z| &gt; R</span>
+          <div class="r-body"><strong>Divergence grossière.</strong> Le terme général ne tend pas vers 0.</div>
+        </div>
+        <div class="r-case r-unk">
+          <span class="r-badge">|z| = R</span>
+          <div class="r-body"><strong>Cas douteux — étude au cas par cas.</strong> On ne peut rien dire en général sur le cercle de convergence. Il faut tester séparément chaque point.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Somme de séries entières — Le Piège du rayon</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Règle pour R de S₁ + S₂</div>
+        <div class="eq hl">\(R \ge \min(R_1, R_2)\)</div>
+        <div class="annot"><strong>L'égalité est garantie si \(R_1 \ne R_2\)</strong> : le rayon de la somme vaut exactement le plus petit des deux. Si \(R_1 = R_2\), le rayon de la somme peut être <em>strictement plus grand</em> (annulation des termes dominants).</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Développements en Série Entière (DSE) usuels</div>
+      <div class="annot-plain" style="margin-bottom:.3rem">Ce sont les mêmes que les DL, mais exacts (pas tronqués) ! Ils convergent sur tout leur disque de convergence.</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Série géométrique — Rayon R = 1</div>
+        <div class="eq hl">\(\dfrac{1}{1-x} = \sum_{n=0}^{\infty} x^n = 1 + x + x^2 + x^3 + \cdots \quad \text{pour } |x| < 1\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Exponentielle — Rayon R = +∞</div>
+        <div class="eq hl">\(e^x = \sum_{n=0}^{\infty} \dfrac{x^n}{n!} = 1 + x + \dfrac{x^2}{2} + \dfrac{x^3}{6} + \cdots \quad \text{pour tout } x \in \mathbb{R}\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Sinus — Rayon R = +∞</div>
+        <div class="eq">\(\sin(x) = \sum_{n=0}^{\infty} \dfrac{(-1)^n x^{2n+1}}{(2n+1)!} \quad \text{pour tout } x \in \mathbb{R}\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Cosinus — Rayon R = +∞</div>
+        <div class="eq">\(\cos(x) = \sum_{n=0}^{\infty} \dfrac{(-1)^n x^{2n}}{(2n)!} \quad \text{pour tout } x \in \mathbb{R}\)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Suites de Fonctions &amp; Convergence Uniforme</h2><span class="icon">〰️</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>La convergence uniforme est la "bonne" convergence pour les suites de fonctions — celle qui <strong>préserve les propriétés</strong> (continuité, intégrabilité, dérivabilité). La convergence simple (pointwise) est plus faible : elle peut exister sans préserver ces propriétés.</p>
+      <p>Intuition : convergence uniforme = toutes les fonctions \(f_n\) restent à une distance \(\varepsilon\) <em>simultanément</em> de la limite \(f\), peu importe le point \(x\).</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Les 3 Hacks pour les QCM</div>
+      <div class="cu-list">
+
+        <div class="cu-item">
+          <div class="cu-num">1</div>
+          <div class="cu-text">
+            <strong>Hack de la Continuité — Tombé en 2021</strong><br>
+            Si les \(f_n(x)\) sont continues et que la limite simple \(f(x)\) est <strong>discontinue</strong>, la convergence est <strong>JAMAIS uniforme</strong>.<br>
+            <em>Exemple classique :</em> \(f_n(x) = x^n\) sur \([0,1]\). Chaque \(f_n\) est continue, mais la limite est 0 si \(x < 1\) et 1 si \(x = 1\) → discontinue → convergence non uniforme sur \([0,1]\).
+          </div>
+        </div>
+
+        <div class="cu-item">
+          <div class="cu-num">2</div>
+          <div class="cu-text">
+            <strong>Interversion des limites (Double Limite)</strong><br>
+            S'il y a convergence uniforme, on peut <strong>intervertir les limites</strong> :<br>
+            \[\lim_{x \to a}\!\Big(\lim_{n \to \infty} f_n(x)\Big) = \lim_{n \to \infty}\!\Big(\lim_{x \to a} f_n(x)\Big)\]
+            Si ces deux membres sont <em>différents</em> sur un exemple donné, il n'y a <strong>pas</strong> convergence uniforme.
+          </div>
+        </div>
+
+        <div class="cu-item">
+          <div class="cu-num">3</div>
+          <div class="cu-text">
+            <strong>Interversion Intégrale et Limite</strong><br>
+            S'il y a convergence uniforme sur \([a,b]\), on peut <strong>intervertir l'intégrale et la limite</strong> :<br>
+            \[\lim_{n \to \infty} \int_a^b f_n(x)\,dx = \int_a^b \!\Big(\lim_{n \to \infty} f_n(x)\Big)\,dx\]
+            Sans convergence uniforme, cette interversion peut être fausse (contre-exemple possible).
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">⚠ Les deux pièges Vrai/Faux les plus fréquents</div>
+      <p><strong>"Si la convergence est simple mais pas uniforme, on ne peut pas intervertir intégrale et limite."</strong> → <strong>VRAI</strong> (en général). La convergence uniforme est une condition <em>suffisante</em>, pas nécessaire — mais en QCM, si on ne l'a pas, on ne peut pas conclure.</p>
+      <p style="margin-top:.5rem"><strong>"Si \(f_n\) converge simplement vers \(f\), et les \(f_n\) sont continues, alors \(f\) est continue."</strong> → <strong>FAUX</strong>. La limite d'une suite de fonctions continues peut être discontinue (cf. \(x^n\) sur \([0,1]\)).</p>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Récapitulatif — Ce que la convergence uniforme permet</div>
+      <ul>
+        <li>La limite \(f\) est <strong>continue</strong> si les \(f_n\) le sont.</li>
+        <li>On peut <strong>intégrer terme à terme</strong> : \(\int \lim f_n = \lim \int f_n\).</li>
+        <li>On peut <strong>dériver terme à terme</strong> (sous conditions supplémentaires sur \(f_n'\)).</li>
+        <li>Les <strong>doubles limites commutent</strong>.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>

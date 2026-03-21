@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 5 MATHS — Analyse Multivariable & Intégration</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #fb923c;   /* orange    — Calcul différentiel / Hessienne */
+    --c2: #34d399;   /* vert      — Intégrales doubles */
+    --c3: #818cf8;   /* indigo    — Intégrales à paramètres */
+    --c4: #f472b6;   /* rose      — Champs de vecteurs */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#120c06 0%,#151520 55%,#0d1210 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(251,146,60,.1) 0%,rgba(52,211,153,.07) 55%,transparent 75%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(251,146,60,.3);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c2); border:1px solid rgba(52,211,153,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#fed7aa 0%,#a7f3d0 35%,#c7d2fe 65%,#fbcfe8 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s}.section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s}.section:nth-child(4){animation-delay:.15s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(251,146,60,.07);  border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(52,211,153,.07);  border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(129,140,248,.07); border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(244,114,182,.07); border-left:3px solid var(--c4)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+  .hack-box ol,.hack-box ul { padding-left:1.3rem; color:#f0d898; } .hack-box li { margin-bottom:.3rem; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(251,146,60,.15);  color:var(--c1)}
+  .s2 .def-term{background:rgba(52,211,153,.15);  color:var(--c2)}
+  .s3 .def-term{background:rgba(129,140,248,.15); color:var(--c3)}
+  .s4 .def-term{background:rgba(244,114,182,.15); color:var(--c4)}
+
+  /* Hessienne steps */
+  .hess-steps { display:flex; flex-direction:column; gap:.75rem; }
+  .hess-step { display:grid; grid-template-columns:1.8rem 1fr; gap:.7rem; align-items:start; }
+  .hess-num { font-family:var(--mono); font-size:.75rem; font-weight:700; color:var(--c1); background:rgba(251,146,60,.15); border-radius:50%; width:1.8rem; height:1.8rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.1rem; }
+  .hess-content { display:flex; flex-direction:column; gap:.35rem; }
+  .hess-label { font-weight:600; color:var(--text); }
+
+  /* Delta tree */
+  .delta-tree { display:flex; flex-direction:column; gap:.5rem; }
+  .dc { border-radius:7px; padding:.6rem .9rem; display:grid; grid-template-columns:auto 1fr; gap:.65rem; align-items:start; font-size:.88rem; }
+  .dc-col  { background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.22); color:#fca5a5; }
+  .dc-ext  { background:rgba(52,211,153,.07);  border:1px solid rgba(52,211,153,.2);  color:#a7f3d0; }
+  .dc-unk  { background:rgba(251,191,36,.06);  border:1px solid rgba(251,191,36,.2);  color:#fde68a; }
+  .dc-badge { font-family:var(--mono); font-size:.75rem; font-weight:700; padding:.15rem .45rem; border-radius:3px; white-space:nowrap; align-self:start; }
+  .dc-col  .dc-badge { background:rgba(248,113,113,.18); color:#fca5a5; }
+  .dc-ext  .dc-badge { background:rgba(52,211,153,.18);  color:#6ee7b7; }
+  .dc-unk  .dc-badge { background:rgba(251,191,36,.15);  color:#fcd34d; }
+  .dc-body strong { color:inherit; }
+  .dc-sub { display:flex; flex-direction:column; gap:.2rem; padding-left:.5rem; border-left:2px dashed rgba(255,255,255,.1); margin-top:.3rem; font-size:.86rem; }
+
+  /* Jacobien highlight */
+  .jacobien-box { background:rgba(248,113,113,.1); border:2px solid rgba(248,113,113,.4); border-radius:8px; padding:.85rem 1.1rem; text-align:center; }
+  .jacobien-box .j-label { font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:#fca5a5; margin-bottom:.4rem; }
+
+  /* Gauss derivation steps */
+  .gauss-steps { display:flex; flex-direction:column; gap:.45rem; }
+  .gs-row { display:grid; grid-template-columns:1.4rem 1fr; gap:.6rem; align-items:start; }
+  .gs-bullet { font-family:var(--mono); font-size:.8rem; color:var(--c2); font-weight:700; }
+  .gs-text { font-size:.9rem; color:#c8d0e0; }
+  .gs-text .eq { margin-top:.2rem; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../../index.html" class="home-btn">← Accueil</a>
+  <style>
+    header {
+      position: relative;
+    }
+
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      color: white;
+      text-decoration: none;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+  <div class="bloc-tag">Bloc 5 Maths · Auto-suffisant</div>
+  <h1>Analyse Multivariable &amp; Intégration</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(251,146,60,.3)">01 · Calcul Différentiel &amp; Hessienne</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(52,211,153,.3)">02 · Intégrales Doubles &amp; Polaires</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(129,140,248,.3)">03 · Intégrales à Paramètres</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(244,114,182,.3)">04 · Champs de Vecteurs</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Calcul Différentiel — Hessienne &amp; Extrema</h2><span class="icon">🏔️</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>C'est la recherche d'extrema locaux pour une fonction \(f(x,y)\). Le concours attend une maîtrise parfaite de la méthode <strong>gradient → hessienne</strong>. Un point critique (gradient nul) peut être un minimum local, un maximum local, ou un col — la hessienne tranche.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Méthode Hessienne — 3 étapes incontournables</div>
+      <div class="hess-steps">
+
+        <div class="hess-step">
+          <div class="hess-num">1</div>
+          <div class="hess-content">
+            <div class="hess-label">Annuler le gradient</div>
+            <div class="eq hl">\(\vec{\nabla}f(x,y) = \vec{0} \iff \begin{cases} \dfrac{\partial f}{\partial x}(x,y) = 0 \\[6pt] \dfrac{\partial f}{\partial y}(x,y) = 0 \end{cases}\)</div>
+            <div class="annot">Résoudre le système simultané. Les solutions \((x_0, y_0)\) sont les <strong>points critiques</strong> candidats.</div>
+          </div>
+        </div>
+
+        <div class="hess-step">
+          <div class="hess-num">2</div>
+          <div class="hess-content">
+            <div class="hess-label">Calculer la matrice Hessienne en chaque point critique</div>
+            <div class="eq hl">\(H_f(x_0, y_0) = \begin{pmatrix} r & s \\ s & t \end{pmatrix} = \begin{pmatrix} \dfrac{\partial^2 f}{\partial x^2} & \dfrac{\partial^2 f}{\partial x \partial y} \\[10pt] \dfrac{\partial^2 f}{\partial y \partial x} & \dfrac{\partial^2 f}{\partial y^2} \end{pmatrix}\)</div>
+            <div class="annot">Le théorème de Schwarz garantit que la hessienne est <strong>symétrique</strong> (\(s = \frac{\partial^2 f}{\partial y \partial x}\)) pour les fonctions \(C^2\).</div>
+          </div>
+        </div>
+
+        <div class="hess-step">
+          <div class="hess-num">3</div>
+          <div class="hess-content">
+            <div class="hess-label">Analyser via le discriminant Δ = rt − s²</div>
+            <div class="eq hl">\(\Delta = rt - s^2 = \det(H_f)\)</div>
+            <div class="delta-tree" style="margin-top:.4rem">
+              <div class="dc dc-col">
+                <span class="dc-badge">Δ &lt; 0</span>
+                <div class="dc-body"><strong>Point Col (selle).</strong> Les valeurs propres sont de signes opposés — la surface monte dans une direction et descend dans l'autre. Pas d'extremum.</div>
+              </div>
+              <div class="dc dc-ext">
+                <span class="dc-badge">Δ &gt; 0</span>
+                <div class="dc-body">
+                  <strong>Extremum local.</strong> Les valeurs propres sont de même signe → regarder \(\text{Tr}(H_f) = r + t\) :
+                  <div class="dc-sub">
+                    <span>Si \(r + t > 0\) (ou \(r > 0\)) → valeurs propres positives → <strong>Minimum local</strong></span>
+                    <span>Si \(r + t < 0\) (ou \(r < 0\)) → valeurs propres négatives → <strong>Maximum local</strong></span>
+                  </div>
+                </div>
+              </div>
+              <div class="dc dc-unk">
+                <span class="dc-badge">Δ = 0</span>
+                <div class="dc-body"><strong>Cas douteux</strong> — méthode insuffisante. Très rare au concours. Vérifier le calcul.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Intégrales Doubles &amp; Changements de Variables</h2><span class="icon">∬</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Calculer \(\iint_D f(x,y)\,dx\,dy\) où \(D\) est un domaine "tordu" (disque, triangle, parabole…). La clé est de bien choisir l'<strong>ordre d'intégration</strong> ou de passer en <strong>coordonnées polaires</strong> quand le domaine a une symétrie circulaire.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Théorème de Fubini — Découper l'intégrale</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Domaine décrit par des fonctions-bornes</div>
+        <div class="eq">\(D = \{(x,y) \mid a \le x \le b,\; \phi_1(x) \le y \le \phi_2(x)\}\)</div>
+        <div class="eq hl">\(\iint_D f(x,y)\,dx\,dy = \int_a^b \!\left(\int_{\phi_1(x)}^{\phi_2(x)} f(x,y)\,dy\right) dx\)</div>
+        <div class="annot"><strong>Hack :</strong> Commence <em>toujours</em> par intégrer par rapport à la variable dont les bornes dépendent de l'autre. Ici les bornes en \(y\) dépendent de \(x\) → intégrer d'abord par rapport à \(y\).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Domaine triangulaire — Annale 2022 Q16</div>
+        <div class="annot-plain">Pour un domaine triangulaire, il faut souvent <strong>changer l'ordre d'intégration</strong> ou couper le domaine en deux pour n'avoir qu'une seule intégrale. Dessiner le domaine est indispensable avant de commencer.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Passage en Coordonnées Polaires</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Substitution</div>
+        <div class="eq">\(\begin{cases} x = r\cos\theta \\ y = r\sin\theta \end{cases} \qquad r \ge 0,\; \theta \in [0, 2\pi[\)</div>
+      </div>
+
+      <div class="jacobien-box">
+        <div class="j-label">🚨 Jacobien — Source de 50% des erreurs !</div>
+        <div class="eq hl" style="background:rgba(0,0,0,.4);border-color:rgba(248,113,113,.35)">\(dx\,dy = r\,dr\,d\theta\)</div>
+      </div>
+
+      <div class="annot">Ne <strong>JAMAIS</strong> oublier le facteur \(r\) ! La relation \(x^2 + y^2 = r^2\) permet de simplifier les intégrandes de la forme \(e^{-(x^2+y^2)}\).</div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Preuve de l'intégrale de Gauss par polaires</div>
+      <p>Pour prouver que \(\int_{-\infty}^{+\infty} e^{-x^2}dx = \sqrt{\pi}\), on calcule le carré :</p>
+      <div class="gauss-steps">
+        <div class="gs-row">
+          <span class="gs-bullet">①</span>
+          <div class="gs-text">\(I^2 = \left(\int e^{-x^2}dx\right)\!\left(\int e^{-y^2}dy\right) = \iint_{\mathbb{R}^2} e^{-(x^2+y^2)}\,dx\,dy\)</div>
+        </div>
+        <div class="gs-row">
+          <span class="gs-bullet">②</span>
+          <div class="gs-text">Passage en polaire (avec le jacobien \(r\,dr\,d\theta\)) :<br>
+            <div class="eq" style="margin-top:.2rem">\(I^2 = \int_0^{2\pi}\!\int_0^{+\infty} e^{-r^2}\,r\,dr\,d\theta = 2\pi \cdot \frac{1}{2} = \pi\)</div>
+          </div>
+        </div>
+        <div class="gs-row">
+          <span class="gs-bullet">③</span>
+          <div class="gs-text"><strong>Donc \(I = \sqrt{\pi}\).</strong> La substitution \(u = r^2\) donne \(\int_0^\infty e^{-r^2} r\,dr = \frac{1}{2}\).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Intégrales à Paramètres</h2><span class="icon">∂</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>On définit une fonction via une intégrale : \(F(x) = \int_a^b f(x,t)\,dt\). Le concours demande ses propriétés (continuité, dérivabilité). La <strong>condition clé</strong> est toujours l'existence d'une <em>fonction dominante intégrable</em>.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Théorème de continuité sous le signe ∫</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Conditions suffisantes</div>
+        <div class="def-grid">
+          <span class="def-term">C1</span><span class="def-desc">\(t \mapsto f(x,t)\) est continue par morceaux sur \([a,b]\).</span>
+          <span class="def-term">C2</span><span class="def-desc">\(x \mapsto f(x,t)\) est continue pour presque tout \(t\).</span>
+          <span class="def-term">C3 ★</span><span class="def-desc">Il existe \(\phi(t)\) intégrable telle que \(|f(x,t)| \le \phi(t)\) pour tout \(x\). C'est la <em>condition de domination</em>.</span>
+        </div>
+        <div class="annot" style="margin-top:.3rem">Si C1, C2, C3 sont satisfaites → <strong>\(F(x)\) est continue</strong>.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Théorème de Leibniz — Dérivation sous le signe ∫</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Formule de Leibniz</div>
+        <div class="eq hl">\(F'(x) = \int_a^b \frac{\partial f}{\partial x}(x,t)\,dt\)</div>
+        <div class="annot">Valable si les mêmes conditions de domination s'appliquent à <strong>\(\dfrac{\partial f}{\partial x}\)</strong> (pas seulement à \(f\)). La dérivée "rentre" sous le signe intégrale.</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Utilisation au concours</div>
+        <div class="annot-plain">C'est la méthode pour vérifier qu'une solution sous forme intégrale satisfait une équation différentielle : on dérive \(F(x)\) à l'aide de Leibniz, puis on vérifie l'équation.</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Résumé :</strong> Les deux théorèmes ont la <em>même structure</em>. La seule différence est la condition de domination : pour la continuité, on domine \(f\) ; pour la dérivabilité, on domine \(\partial f / \partial x\).
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Champs de Vecteurs &amp; Formes Différentielles</h2><span class="icon">🧭</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Notions plus avancées qui apparaissent dans les <strong>annales les plus difficiles</strong> et ont un fort pouvoir discriminant. La question centrale est toujours : ce champ dérive-t-il d'un potentiel ?</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Circulation d'un champ le long d'une courbe</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Définition</div>
+        <div class="eq hl">\(\mathcal{C} = \int_\gamma \vec{V} \cdot d\vec{l}\)</div>
+        <div class="annot">Intégrale curviligne du champ \(\vec{V}\) le long de la courbe orientée \(\gamma\). Mesure le "travail" du champ le long du chemin.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Champ qui dérive d'un potentiel (\(\vec{V} = \vec{\nabla}f\))</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Condition nécessaire et suffisante</div>
+        <div class="eq hl">\(\vec{V} = \vec{\nabla}f \iff \vec{\text{rot}}(\vec{V}) = \vec{0} \quad \text{(sur domaine simplement connexe)}\)</div>
+        <div class="annot">Un champ dérive d'un potentiel si et seulement si son <strong>rotationnel est nul</strong> sur un domaine simplement connexe (sans trou).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Conséquence — Circulation sur chemin fermé</div>
+        <div class="eq hl">\(\oint_\gamma \vec{\nabla}f \cdot d\vec{l} = 0\)</div>
+        <div class="annot">La circulation sur tout chemin <strong>fermé</strong> est nulle. C'est la caractérisation des champs conservatifs.</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Théorème fondamental — Indépendance du chemin</div>
+        <div class="eq hl">\(\int_A^B \vec{\nabla}f \cdot d\vec{l} = f(B) - f(A)\)</div>
+        <div class="annot">Si le champ dérive du potentiel \(f\), la circulation ne dépend <em>que</em> des points de départ et d'arrivée — <strong>pas du chemin parcouru</strong>. Analogue du théorème fondamental du calcul intégral en 1D.</div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Stratégie de reconnaissance (QCM)</div>
+      <p><strong>1er réflexe :</strong> Calculer le rotationnel de \(\vec{V}\). Si \(\vec{\text{rot}}(\vec{V}) \ne \vec{0}\) → le champ ne dérive pas d'un potentiel → les intégrales curvilignes dépendent du chemin.</p>
+      <p><strong>2e réflexe :</strong> Si \(\vec{\text{rot}}(\vec{V}) = \vec{0}\) et le domaine est simplement connexe → le champ dérive d'un potentiel → pour calculer la circulation, utilise \(f(B) - f(A)\) sans intégrer le long du chemin.</p>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Rotationnel en 2D — Condition simplifiée</div>
+      <p>Pour \(\vec{V} = (P, Q)\) en 2D, le rotationnel est nul si et seulement si :</p>
+      <p style="text-align:center;margin:.4rem 0">\(\dfrac{\partial Q}{\partial x} = \dfrac{\partial P}{\partial y}\)</p>
+      <p>C'est la <strong>condition d'exactitude</strong> de la forme différentielle \(P\,dx + Q\,dy\). Si cette condition est satisfaite, le potentiel \(f\) tel que \(\vec{\nabla}f = (P,Q)\) peut être trouvé par intégration.</p>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 4 MATHS — Probabilités & Dénombrement</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #fbbf24;   /* ambre     — Dénombrement */
+    --c2: #60a5fa;   /* bleu      — Probabilités conditionnelles */
+    --c3: #a78bfa;   /* violet    — Espérance, Variance, Inégalités */
+    --c4: #34d399;   /* vert      — Lois de probabilité */
+    --c5: #f472b6;   /* rose      — Jensen & convexité */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#131008 0%,#161520 55%,#0d130e 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(251,191,36,.1) 0%,rgba(52,211,153,.07) 55%,transparent 75%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(251,191,36,.3);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c4); border:1px solid rgba(52,211,153,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#fde68a 0%,#bfdbfe 35%,#ddd6fe 65%,#bbf7d0 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s} .section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s} .section:nth-child(4){animation-delay:.15s}
+  .section:nth-child(5){animation-delay:.20s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(251,191,36,.07); border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(96,165,250,.07);  border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(167,139,250,.07); border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(52,211,153,.07);  border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(244,114,182,.07); border-left:3px solid var(--c5)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(251,191,36,.15); color:var(--c1)}
+  .s2 .def-term{background:rgba(96,165,250,.15);  color:var(--c2)}
+  .s3 .def-term{background:rgba(167,139,250,.15); color:var(--c3)}
+  .s4 .def-term{background:rgba(52,211,153,.15);  color:var(--c4)}
+  .s5 .def-term{background:rgba(244,114,182,.15); color:var(--c5)}
+
+  /* Organigramme dénombrement */
+  .orga { display:flex; flex-direction:column; gap:.5rem; }
+  .orga-question { font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .orga-row { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  .orga-card { border-radius:8px; padding:.85rem 1rem; display:flex; flex-direction:column; gap:.35rem; border:1px solid var(--border); background:rgba(0,0,0,.25); }
+  .orga-card.yes { border-color:rgba(251,191,36,.3); background:rgba(251,191,36,.06); }
+  .orga-card.no  { border-color:rgba(96,165,250,.3);  background:rgba(96,165,250,.06); }
+  .orga-card.sim { border-color:rgba(52,211,153,.3);  background:rgba(52,211,153,.06); }
+  .orga-cond { font-family:var(--mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; }
+  .yes .orga-cond { color:var(--c1); }
+  .no  .orga-cond { color:var(--c2); }
+  .sim .orga-cond { color:var(--c4); }
+  .orga-name { font-weight:700; color:var(--text); font-size:.95rem; }
+  .orga-formula { font-family:var(--mono); font-size:.85rem; color:#c8d0e0; }
+  .orga-ex { font-size:.82rem; color:var(--muted); font-style:italic; }
+
+  /* Lois table */
+  .lois-table { width:100%; border-collapse:collapse; font-size:.84rem; }
+  .lois-table th { font-family:var(--mono); font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; padding:.5rem .8rem; text-align:left; border-bottom:2px solid var(--border); color:var(--muted); }
+  .lois-table td { padding:.55rem .8rem; border-bottom:1px solid rgba(255,255,255,.05); color:#c2c9db; vertical-align:middle; }
+  .lois-table tr:last-child td { border-bottom:none; }
+  .lois-table td:first-child { font-weight:700; white-space:nowrap; }
+  .lois-table td:nth-child(3),.lois-table td:nth-child(4),.lois-table td:nth-child(5) { font-family:var(--mono); font-size:.82rem; }
+
+  /* Inégalités cards */
+  .ineq-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+  .ineq-card { border-radius:8px; padding:.9rem 1rem; border:1px solid var(--border); background:rgba(0,0,0,.25); display:flex; flex-direction:column; gap:.4rem; }
+  .ineq-name { font-family:var(--mono); font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; margin-bottom:.1rem; }
+  .markov   .ineq-name { color:#c084fc; }
+  .tcheby   .ineq-name { color:#60a5fa; }
+  .markov   { border-color:rgba(192,132,252,.25); }
+  .tcheby   { border-color:rgba(96,165,250,.25); }
+
+  /* Sens unique arrow */
+  .implication-block { display:flex; flex-direction:column; gap:.5rem; padding:.8rem 1rem; background:rgba(0,0,0,.25); border-radius:8px; border:1px solid var(--border); }
+  .impl-row { display:grid; grid-template-columns:1fr auto 1fr; gap:.7rem; align-items:center; font-size:.9rem; }
+  .impl-left  { text-align:right; color:#c8d0e0; }
+  .impl-arrow { font-family:var(--mono); font-weight:700; font-size:1.1rem; text-align:center; }
+  .impl-right { color:#c8d0e0; }
+  .impl-ok  .impl-arrow { color:#86efac; }
+  .impl-ko  .impl-arrow { color:#fca5a5; }
+  .impl-label { font-family:var(--mono); font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); text-align:center; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} .orga-row{grid-template-columns:1fr} .ineq-grid{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../../index.html" class="home-btn">← Accueil</a>
+  <style>
+    header {
+      position: relative;
+    }
+
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      color: white;
+      text-decoration: none;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+  <div class="bloc-tag">Bloc 4 Maths · Auto-suffisant</div><span class="version-badge">Version Universelle</span>
+  <h1>Probabilités &amp; Dénombrement</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(251,191,36,.3)">01 · Dénombrement</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(96,165,250,.3)">02 · Probabilités Conditionnelles</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(167,139,250,.3)">03 · Espérance &amp; Variance</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(52,211,153,.3)">04 · Lois de Probabilité</span>
+    <span class="toc-chip" style="color:var(--c5);border-color:rgba(244,114,182,.3)">05 · Jensen &amp; Convexité</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Dénombrement — La Méthode Infaillible</h2><span class="icon">🎲</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Tout exercice de probabilités sur un univers fini commence par un <strong>"Combien ?"</strong>. Une erreur de dénombrement ici et tout le reste est faux. La clé est de se poser deux questions dans l'ordre : <em>l'ordre compte-t-il ?</em> puis <em>peut-on répéter ?</em></p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Organigramme des formules — À dérouler mentalement</div>
+      <div class="orga">
+
+        <div class="orga-question">Question 1 : L'ordre compte-t-il ?</div>
+
+        <div class="orga-row">
+          <div class="orga-card yes">
+            <div class="orga-cond">✓ Oui — tirages successifs</div>
+            <div style="display:flex;flex-direction:column;gap:.4rem;margin-top:.2rem">
+              <div style="padding:.5rem .7rem;background:rgba(0,0,0,.3);border-radius:6px">
+                <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;color:rgba(251,191,36,.7);margin-bottom:.2rem">Avec remise (répétition ok)</div>
+                <div class="orga-name">p-liste</div>
+                <div class="orga-formula">\(n^k\)</div>
+                <div class="orga-ex">Tirages successifs, on remet à chaque fois</div>
+              </div>
+              <div style="padding:.5rem .7rem;background:rgba(0,0,0,.3);border-radius:6px">
+                <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;color:rgba(96,165,250,.7);margin-bottom:.2rem">Sans remise (pas de répétition)</div>
+                <div class="orga-name">Arrangement</div>
+                <div class="orga-formula">\(A_n^k = \dfrac{n!}{(n-k)!}\)</div>
+                <div class="orga-ex">Podium, anagrammes avec contrainte</div>
+              </div>
+            </div>
+          </div>
+          <div class="orga-card sim">
+            <div class="orga-cond">✗ Non — tirage simultané</div>
+            <div style="padding:.5rem .7rem;background:rgba(0,0,0,.3);border-radius:6px;margin-top:.2rem">
+              <div style="font-family:var(--mono);font-size:.65rem;text-transform:uppercase;color:rgba(52,211,153,.7);margin-bottom:.2rem">Sans remise (forcément)</div>
+              <div class="orga-name">Combinaison</div>
+              <div class="orga-formula">\(\dbinom{n}{k} = \dfrac{n!}{k!(n-k)!}\)</div>
+              <div class="orga-ex">Main de cartes, comité, échantillon</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Valeurs utiles à retenir</div>
+      <div class="def-grid">
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c1)">\(\binom{n}{0}\)</span><span class="def-desc" style="color:#f0d898">= 1 (une seule façon de choisir 0 éléments)</span>
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c1)">\(\binom{n}{n}\)</span><span class="def-desc" style="color:#f0d898">= 1 (une seule façon de tout prendre)</span>
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c1)">\(\binom{n}{1}\)</span><span class="def-desc" style="color:#f0d898">= n</span>
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c1)">\(\binom{n}{k}\)</span><span class="def-desc" style="color:#f0d898">= \(\binom{n}{n-k}\) — symétrie des combinaisons</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Probabilités Conditionnelles &amp; Indépendance</h2><span class="icon">🔀</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>C'est le cœur de la modélisation probabiliste. Le concours teste la différence subtile entre <strong>indépendance</strong> (propriété forte) et <strong>non-corrélation</strong> (propriété faible). Ces deux notions sont souvent confondues — c'est le piège de niveau L3.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Les 3 formules fondamentales</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Probabilité conditionnelle</div>
+        <div class="eq hl">\(P(A \mid B) = \dfrac{P(A \cap B)}{P(B)}\)</div>
+        <div class="annot">Lire : "probabilité de A sachant que B est réalisé". Définie uniquement si \(P(B) > 0\).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Formule des Probabilités Totales</div>
+        <div class="eq hl">\(P(A) = \sum_i P(A \mid B_i)\,P(B_i)\)</div>
+        <div class="annot">Valable si les \((B_i)\) forment une <strong>partition de l'univers</strong> (mutuellement exclusifs, d'union = Ω). On "décompose" A selon les scénarios possibles.</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Théorème de Bayes — Inverser la condition</div>
+        <div class="eq hl">\(P(B_i \mid A) = \dfrac{P(A \mid B_i)\,P(B_i)}{P(A)}\)</div>
+        <div class="annot">Permet de calculer une probabilité <em>a posteriori</em> à partir d'une probabilité <em>a priori</em>. On connaît \(P(A|B_i)\) et on veut \(P(B_i|A)\) : c'est l'inversion causale.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Indépendance vs Non-Corrélation — Le piège de niveau L3</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Définition rigoureuse de l'indépendance</div>
+        <div class="eq hl">\(X, Y \text{ indépendantes} \iff \forall\, f, g \text{ bornées : } E(f(X)\,g(Y)) = E(f(X))\,E(g(Y))\)</div>
+        <div class="annot">L'indépendance est une propriété <strong>très forte</strong> : elle doit valoir pour <em>toutes</em> les fonctions bornées, pas seulement pour \(f(x) = x\).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Covariance</div>
+        <div class="eq hl">\(\text{Cov}(X,Y) = E\big[(X - E(X))(Y - E(Y))\big] = E(XY) - E(X)\,E(Y)\)</div>
+        <div class="annot">La covariance mesure la <strong>corrélation linéaire</strong> entre X et Y. \(\text{Cov} = 0\) signifie "non-corrélés linéairement", pas "indépendants".</div>
+      </div>
+    </div>
+
+    <div class="implication-block">
+      <div class="impl-row impl-ok">
+        <div class="impl-left">\(X, Y\) indépendantes</div>
+        <div class="impl-arrow">⟹</div>
+        <div class="impl-right">\(\text{Cov}(X,Y) = 0\) (non-corrélées)</div>
+      </div>
+      <div class="impl-label">Sens unique — la réciproque est FAUSSE</div>
+      <div class="impl-row impl-ko">
+        <div class="impl-left">\(\text{Cov}(X,Y) = 0\)</div>
+        <div class="impl-arrow">⟹̸</div>
+        <div class="impl-right">\(X, Y\) indépendantes</div>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">⚠ Contre-exemple classique</div>
+      <p>Soit \(X \sim \mathcal{N}(0,1)\) et \(Y = X^2\). Alors \(\text{Cov}(X,Y) = E(X^3) - E(X)\,E(X^2) = 0\) (par symétrie de la loi normale). Pourtant \(Y\) est <strong>entièrement déterminée</strong> par \(X\) — elles sont parfaitement dépendantes !</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Espérance, Variance &amp; Inégalités</h2><span class="icon">📊</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Il ne suffit pas de savoir <em>calculer</em> \(E(X)\) et \(V(X)\) — il faut aussi connaître les théorèmes qui les <strong>encadrent</strong>. Les inégalités de Markov et Bienaymé-Tchebychev permettent de majorer des probabilités sans connaître la loi complète.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Formules de calcul</div>
+
+      <div class="grid2">
+        <div class="eq-row">
+          <div class="eq-name-tag">Espérance — Discret</div>
+          <div class="eq">\(E(X) = \sum_k k \cdot P(X=k)\)</div>
+        </div>
+        <div class="eq-row">
+          <div class="eq-name-tag">Espérance — Continu</div>
+          <div class="eq">\(E(X) = \int_{-\infty}^{+\infty} t \cdot f(t)\,dt\)</div>
+        </div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Variance — Théorème de Koenig-Huygens</div>
+        <div class="eq hl">\(V(X) = E(X^2) - [E(X)]^2\)</div>
+        <div class="annot">Formule la plus pratique pour calculer la variance. Toujours \(V(X) \ge 0\) (ce que Jensen confirmera).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Propriétés linéaires</div>
+        <div class="def-grid">
+          <span class="def-term">\(E(aX+b)\)</span><span class="def-desc">\(= aE(X) + b\) — l'espérance est linéaire</span>
+          <span class="def-term">\(V(aX+b)\)</span><span class="def-desc">\(= a^2 V(X)\) — la constante b n'influe pas sur la variance</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Espérance par la fonction de survie</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Pour X ≥ 0 — Discret</div>
+        <div class="eq">\(E(X) = \sum_{k=1}^{\infty} P(X \ge k)\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Pour X ≥ 0 — Continu</div>
+        <div class="eq">\(E(X) = \int_0^{+\infty} P(X > t)\,dt\)</div>
+        <div class="annot">Formule utile pour les questions théoriques et les preuves. Elle relie l'espérance à la <strong>fonction de survie</strong> \(t \mapsto P(X > t)\).</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Inégalités de concentration</div>
+      <div class="ineq-grid">
+        <div class="ineq-card markov">
+          <div class="ineq-name">Inégalité de Markov</div>
+          <div class="eq hl">\(P(X \ge a) \le \dfrac{E(X)}{a}\)</div>
+          <div class="annot">Valable pour \(X \ge 0\) et \(a > 0\). <strong>Majore une probabilité par l'espérance.</strong> N'utilise que \(E(X)\).</div>
+        </div>
+        <div class="ineq-card tcheby">
+          <div class="ineq-name">Inégalité de Bienaymé-Tchebychev</div>
+          <div class="eq hl">\(P\big(|X - E(X)| \ge a\big) \le \dfrac{V(X)}{a^2}\)</div>
+          <div class="annot">Valable pour tout \(a > 0\). <strong>Contrôle l'écart à la moyenne par la variance.</strong> Utilise \(E(X)\) et \(V(X)\).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Propriété fondamentale :</strong> Une variable aléatoire <em>bornée</em> (c'est-à-dire \(|X| \le M\) pour un certain \(M\)) admet toujours des moments de tous ordres — donc une espérance et une variance finies. Utile pour valider l'existence des quantités calculées.
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Les Lois de Probabilité à Maîtriser</h2><span class="icon">📈</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le concours attend que vous <strong>reconnaissiez immédiatement</strong> une situation et la loi associée, pour utiliser directement ses propriétés sans recalcul. La clé : mémoriser les contextes d'application, pas seulement les formules.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Lois discrètes</div>
+      <table class="lois-table">
+        <tr><th>Loi</th><th>Contexte d'application</th><th>Espérance</th><th>Variance</th></tr>
+        <tr>
+          <td style="color:var(--c4)">Bernoulli(\(p\))</td>
+          <td>1 épreuve : succès (prob \(p\)) ou échec</td>
+          <td>\(p\)</td>
+          <td>\(p(1-p)\)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">Binomiale(\(n,p\))</td>
+          <td>\(n\) épreuves de Bernoulli <em>indépendantes</em></td>
+          <td>\(np\)</td>
+          <td>\(np(1-p)\)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">Géométrique(\(p\))</td>
+          <td>Rang du 1er succès dans une suite d'épreuves Bernoulli</td>
+          <td>\(1/p\)</td>
+          <td>\((1-p)/p^2\)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">Poisson(\(\lambda\))</td>
+          <td>Comptage d'événements rares dans un temps/espace fixé</td>
+          <td>\(\lambda\)</td>
+          <td>\(\lambda\)</td>
+        </tr>
+      </table>
+      <div class="annot" style="margin-top:.5rem">Poisson(\(\lambda\)) est la limite de Binomiale(\(n, \lambda/n\)) quand \(n \to \infty\). Retenir : <strong>espérance = variance = λ</strong> pour Poisson.</div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Lois continues</div>
+      <table class="lois-table">
+        <tr><th>Loi</th><th>Contexte</th><th>Densité \(f(x)\)</th><th>Esp.</th><th>Var.</th></tr>
+        <tr>
+          <td style="color:var(--c4)">Uniforme \([a,b]\)</td>
+          <td>Tirage "au hasard" dans un intervalle</td>
+          <td>\(\dfrac{1}{b-a}\)</td>
+          <td>\(\dfrac{a+b}{2}\)</td>
+          <td>\(\dfrac{(b-a)^2}{12}\)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">Expo(\(\lambda\))</td>
+          <td>Durée de vie "sans mémoire" — temps entre événements Poisson</td>
+          <td>\(\lambda e^{-\lambda x}\)</td>
+          <td>\(1/\lambda\)</td>
+          <td>\(1/\lambda^2\)</td>
+        </tr>
+        <tr>
+          <td style="color:var(--c4)">Normale \(\mathcal{N}(\mu,\sigma^2)\)</td>
+          <td>Somme de VA indépendantes (TCL), phénomènes de mesure</td>
+          <td>\(\dfrac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\)</td>
+          <td>\(\mu\)</td>
+          <td>\(\sigma^2\)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Reconnaître la loi en 5 secondes</div>
+      <p><strong>Binomiale vs Poisson :</strong> \(n\) grand et \(p\) très petit → approximer par Poisson avec \(\lambda = np\).</p>
+      <p><strong>Exponentielle :</strong> le seul mot "sans mémoire" dans l'énoncé → c'est forcément une loi exponentielle.</p>
+      <p><strong>Normale :</strong> "somme de \(n\) variables indépendantes identiquement distribuées" pour \(n\) grand → Théorème Central Limite → normale.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 05 ════════════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Bonus Analyse — Jensen &amp; Convexité</h2><span class="icon">📐</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Certains QCM testent des propriétés d'analyse qui ont des <strong>applications directes en probabilités</strong>. L'inégalité de Jensen est le pont entre la convexité des fonctions et les inégalités sur les espérances.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Inégalité de Jensen</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Énoncé</div>
+        <div class="eq hl">Si \(f\) est <strong>convexe</strong>, alors : \(\quad f(E(X)) \le E(f(X))\)</div>
+        <div class="annot">Jensen dit que pour une fonction convexe, "la valeur en la moyenne" est plus petite que "la moyenne des valeurs". C'est le sens de la flèche de convexité.</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Application directe — La variance est positive</div>
+        <div class="eq">La fonction \(x \mapsto x^2\) est <strong>convexe</strong>.</div>
+        <div class="eq">\(\text{Jensen} \implies (E(X))^2 \le E(X^2)\)</div>
+        <div class="eq hl">\(\implies V(X) = E(X^2) - (E(X))^2 \ge 0\)</div>
+        <div class="annot">Jensen fournit une <strong>preuve élégante</strong> que la variance est toujours positive. C'est une question QCM fréquente : "pourquoi \(V(X) \ge 0\) ?"</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Propriétés des fonctions convexes utiles</div>
+      <div class="def-grid">
+        <span class="def-term">Strictement convexe</span><span class="def-desc">Coupe une droite en <em>au plus 2 points</em>. Utilisé pour montrer l'unicité de solutions.</span>
+        <span class="def-term">Somme</span><span class="def-desc">La <em>somme</em> de deux fonctions convexes est convexe. Critère pratique pour construire de nouvelles fonctions convexes.</span>
+        <span class="def-term">Concave</span><span class="def-desc">Si \(f\) est <em>concave</em> : \(f(E(X)) \ge E(f(X))\) (Jensen inversé). Ex : \(\ln\) est concave → \(\ln(E(X)) \ge E(\ln(X))\).</span>
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Applications QCM fréquentes de Jensen</div>
+      <ul>
+        <li>\(f(x) = e^x\) est convexe → \(e^{E(X)} \le E(e^X)\)</li>
+        <li>\(f(x) = x^2\) est convexe → \((E(X))^2 \le E(X^2)\) → \(V(X) \ge 0\) ✓</li>
+        <li>\(f(x) = |x|\) est convexe → \(|E(X)| \le E(|X|)\)</li>
+        <li>\(f(x) = \ln(x)\) est <em>concave</em> → \(\ln(E(X)) \ge E(\ln(X))\) (Jensen inversé)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>

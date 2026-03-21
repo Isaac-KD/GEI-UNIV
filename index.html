@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiches GEI-UNIV — Arsenal Complet</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --surface2:#1c2133;
+    --border:  #252c3e;
+    --text:    #e8ecf4;
+    --muted:   #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+
+    /* Maths palette */
+    --m1: #4ade80;
+    --m2: #60a5fa;
+    --m3: #818cf8;
+    --m4: #fbbf24;
+    --m5: #fb923c;
+
+    /* Physique palette */
+    --p0: #e2e8f0;
+    --p1: #38bdf8;
+    --p2: #34d399;
+    --p3: #a78bfa;
+    --p4: #f472b6;
+    --p5: #f87171;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #080b10 0%, #111525 50%, #0b0e18 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 50% 80% at 20% 50%, rgba(74,222,128,.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 80% at 80% 50%, rgba(99,102,241,.08) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(96,165,250,.06) 0%, transparent 50%);
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900;
+    background: linear-gradient(90deg, #bbf7d0 0%, #bfdbfe 35%, #ddd6fe 65%, #fde68a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    line-height: 1.1;
+  }
+  .hero-sub {
+    margin-top: 1.2rem;
+    font-size: 1rem;
+    color: #8896af;
+    position: relative;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .6rem;
+    margin-top: 2rem;
+    position: relative;
+  }
+  .hero-badge {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .3rem .9rem;
+    border-radius: 20px;
+    border: 1px solid;
+    letter-spacing: .06em;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-intro {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .section-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 900;
+  }
+  .section-count {
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: .2rem .65rem;
+    border-radius: 3px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--border);
+  }
+  .section-desc {
+    font-size: .92rem;
+    color: #8896af;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  /* ── BLOC CARD ── */
+  .bloc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+    animation: fadeUp .4s ease both;
+  }
+  .bloc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .card-header {
+    padding: 1.1rem 1.3rem .9rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+  }
+  .card-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card-header-text { flex: 1; }
+  .card-num {
+    font-family: var(--mono);
+    font-size: .65rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .15rem;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .card-body {
+    padding: 1rem 1.3rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+  }
+  .card-desc {
+    font-size: .86rem;
+    color: #8896af;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-family: var(--mono);
+    font-size: .68rem;
+    padding: .18rem .55rem;
+    border-radius: 4px;
+    letter-spacing: .04em;
+  }
+  .meta-freq {
+    background: rgba(255,255,255,.07);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* Rentabilité stars */
+  .meta-rent {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    margin-left: auto;
+  }
+  .star { color: #f59e0b; font-size: .8rem; }
+  .star.off { color: var(--border); }
+
+  /* ── STRATEGY BOX ── */
+  .strategy {
+    border-radius: 6px;
+    padding: .55rem .8rem;
+    font-size: .8rem;
+    color: #b4bdd0;
+    background: rgba(255,255,255,.03);
+    border: 1px dashed rgba(255,255,255,.1);
+    line-height: 1.5;
+  }
+  .strategy strong { color: var(--text); }
+
+  /* ── CARD ACCENT BORDERS ── */
+  .m1 .card-header { border-left: 4px solid var(--m1); }
+  .m1:hover { border-color: rgba(74,222,128,.4); }
+  .m1 .card-title { color: var(--m1); }
+
+  .m2 .card-header { border-left: 4px solid var(--m2); }
+  .m2:hover { border-color: rgba(96,165,250,.4); }
+  .m2 .card-title { color: var(--m2); }
+
+  .m3 .card-header { border-left: 4px solid var(--m3); }
+  .m3:hover { border-color: rgba(129,140,248,.4); }
+  .m3 .card-title { color: var(--m3); }
+
+  .m4 .card-header { border-left: 4px solid var(--m4); }
+  .m4:hover { border-color: rgba(251,191,36,.4); }
+  .m4 .card-title { color: var(--m4); }
+
+  .m5 .card-header { border-left: 4px solid var(--m5); }
+  .m5:hover { border-color: rgba(251,146,60,.4); }
+  .m5 .card-title { color: var(--m5); }
+
+  .p0 .card-header { border-left: 4px solid var(--p0); }
+  .p0:hover { border-color: rgba(226,232,240,.35); }
+  .p0 .card-title { color: var(--p0); }
+
+  .p1 .card-header { border-left: 4px solid var(--p1); }
+  .p1:hover { border-color: rgba(56,189,248,.4); }
+  .p1 .card-title { color: var(--p1); }
+
+  .p2 .card-header { border-left: 4px solid var(--p2); }
+  .p2:hover { border-color: rgba(52,211,153,.4); }
+  .p2 .card-title { color: var(--p2); }
+
+  .p3 .card-header { border-left: 4px solid var(--p3); }
+  .p3:hover { border-color: rgba(167,139,250,.4); }
+  .p3 .card-title { color: var(--p3); }
+
+  .p4 .card-header { border-left: 4px solid var(--p4); }
+  .p4:hover { border-color: rgba(244,114,182,.4); }
+  .p4 .card-title { color: var(--p4); }
+
+  .p5 .card-header { border-left: 4px solid var(--p5); }
+  .p5:hover { border-color: rgba(248,113,113,.4); }
+  .p5 .card-title { color: var(--p5); }
+
+  /* ── SEPARATOR ── */
+  .sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--border) 30%, var(--border) 70%, transparent 100%);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    color: var(--muted);
+  }
+
+  /* ── ANIMATION DELAYS ── */
+  .cards-grid .bloc-card:nth-child(1){animation-delay:.05s}
+  .cards-grid .bloc-card:nth-child(2){animation-delay:.10s}
+  .cards-grid .bloc-card:nth-child(3){animation-delay:.15s}
+  .cards-grid .bloc-card:nth-child(4){animation-delay:.20s}
+  .cards-grid .bloc-card:nth-child(5){animation-delay:.25s}
+
+  @media (max-width:640px) {
+    .cards-grid { grid-template-columns: 1fr; }
+    .hero { padding: 3rem 1.2rem 2.5rem; }
+    .section-intro { flex-direction: column; gap: .4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <p class="hero-eyebrow">GEI-UNIV · Préparation Concours</p>
+  <h1>Fiches<br>de Révision</h1>
+  <p class="hero-sub">11 fiches auto-suffisantes · Zéro prérequis · Tous les contextes, pièges et hacks du concours</p>
+  <div class="hero-badges">
+    <span class="hero-badge" style="color:var(--m1);border-color:rgba(74,222,128,.3)">5 Blocs Mathématiques</span>
+    <span class="hero-badge" style="color:var(--p1);border-color:rgba(56,189,248,.3)">6 Blocs Physique</span>
+    <span class="hero-badge" style="color:var(--muted);border-color:var(--border)">22 fichiers HTML + MD</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ════════════════ MATHÉMATIQUES ════════════════ -->
+  <section>
+    <div class="section-intro">
+      <h2 style="background:linear-gradient(90deg,#bbf7d0,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mathématiques</h2>
+      <span class="section-count">5 blocs · ~18 questions</span>
+    </div>
+    <p class="section-desc">Les questions de mathématiques représentent la première moitié du concours. Chaque bloc a été calibré selon sa rentabilité réelle — du DL ultra-rapide aux séries, plus chronophages.</p>
+
+    <div class="cards-grid">
+
+      <!-- Bloc 1 — Analyse & DL -->
+      <a class="bloc-card m1" href="Math/Analyse/Analyse&DL.html">
+        <div class="card-header">
+          <div class="card-icon">📈</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 1 · Maths</div>
+            <div class="card-title">Analyse, DL &amp; Fonctions à 2 Variables</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">DL usuels, hack de la tangente, limites par DL, convexité, piège de dérivabilité, méthode Hessienne pour les extrema.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">2–3 questions</span>
+            <div class="meta-rent" title="Rentabilité maximale">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Investissement minimal, retour maximal. Apprendre les DL par cœur en quelques heures garantit des points faciles le jour J.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 2 — Séries -->
+      <a class="bloc-card m2" href="Math/Series/Series.html">
+        <div class="card-header">
+          <div class="card-icon">🧠</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 2 · Maths</div>
+            <div class="card-title">Séries, Intégrales &amp; Convergence</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Critères de Riemann, d'Alembert, équivalences, CSSA, intégrales de Gauss &amp; Bertrand, rayon de convergence, convergence uniforme.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">4–6 questions</span>
+            <div class="meta-rent" title="Rentabilité faible sauf bases">
+              <span class="star">★</span><span class="star off">★</span><span class="star off">★</span><span class="star off">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Volume de connaissances immense. Assure les bases (D'Alembert, rayon de convergence). Fais l'impasse sur la convergence uniforme complète si le temps manque.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 3 — Algèbre Linéaire -->
+      <a class="bloc-card m3" href="Math/AlgebreLineaire/AlgebreLineaire.html">
+        <div class="card-header">
+          <div class="card-icon">⚙️</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 3 · Maths</div>
+            <div class="card-title">Algèbre Linéaire &amp; Géométrie</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Scan rapide d'une matrice, diagonalisation, polynôme annulateur, théorème du rang, noyau/image, géométrie euclidienne, Gram-Schmidt.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">3–5 questions</span>
+            <div class="meta-rent" title="Rentabilité bonne">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star off">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Cibler les méthodes systématiques (rang, projeté orthogonal, distance point-plan). Les preuves abstraites ne sont pas rentables.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 4 — Probabilités -->
+      <a class="bloc-card m4" href="Math/Proba/probabilités.html">
+        <div class="card-header">
+          <div class="card-icon">🎲</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 4 · Maths</div>
+            <div class="card-title">Probabilités &amp; Dénombrement</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Organigramme p-liste/arrangement/combinaison, Bayes, indépendance vs non-corrélation, Markov, Tchebychev, lois usuelles, Jensen.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">3–5 questions</span>
+            <div class="meta-rent" title="Rentabilité excellente">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Pépite des révisions. Bayes et les lois usuelles tombent tout le temps et s'assimilent très vite. Concentration maximale sur les probabilités conditionnelles.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 5 — Analyse Multivariable -->
+      <a class="bloc-card m5" href="Math/Integral&AnalyseMulti/Integral&AnalyseMulti.html">
+        <div class="card-header">
+          <div class="card-icon">🌍</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 5 · Maths</div>
+            <div class="card-title">Analyse Multivariable &amp; Intégration</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Hessienne complète (gradient, Δ = rt − s²), Fubini, coordonnées polaires (jacobien !), intégrales à paramètres, Leibniz, champs de vecteurs.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">3–5 questions</span>
+            <div class="meta-rent" title="Rentabilité très bonne sur Hessienne">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> L'algorithme Hessien prend 30 min à apprendre et tombe chaque année. Les changements de variables tordus sont un gouffre à temps — à éviter si le temps manque.</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="sep"></div>
+
+  <!-- ════════════════ PHYSIQUE ════════════════ -->
+  <section>
+    <div class="section-intro">
+      <h2 style="background:linear-gradient(90deg,#bae6fd,#a7f3d0,#ddd6fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Physique</h2>
+      <span class="section-count">6 blocs · ~20 questions (Q21–Q40)</span>
+    </div>
+    <p class="section-desc">Les questions de physique couvrent 5 grands blocs thématiques. Le concepteur assemble son épreuve en les combinant — commence toujours par Analyse dimentionelle et Unités pour les points gratuits.</p>
+
+    <div class="cards-grid">
+
+      <!-- Bloc 0 — Dimensionnalité -->
+      <a class="bloc-card p0" href="Physique/Dimensionallité&Unités/Dimensionallité&Unités.html">
+        <div class="card-header">
+          <div class="card-icon">📏</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 0 · Physique</div>
+            <div class="card-title">Analyse Dimensionnelle &amp; Unités</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Les 7 piliers SI (piège du kg !), pyramide de la mécanique, constantes fondamentales (h, R, k_B), électromagnétisme sans douleur.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">1–2 questions (Q21/Q22)</span>
+            <div class="meta-rent" title="Points gratuits — à faire en priorité">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Points "gratuits" pour te mettre en confiance. À faire <em>immédiatement</em> dès le début de l'épreuve.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 2 — Thermo -->
+      <a class="bloc-card p1" href="Physique/Thermo&Fluides/Thermodynamique&Fluides.html">
+        <div class="card-header">
+          <div class="card-icon">🌡️</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 2 · Physique</div>
+            <div class="card-title">Thermodynamique &amp; Fluides</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Entropie, Laplace, Carnot (η = 1 − T_F/T_C en Kelvin !), Van der Waals, loi barométrique, poussée d'Archimède, piège du glaçon.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">4–5 questions</span>
+            <div class="meta-rent" title="Rentabilité élevée">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Beaucoup de théorie et pièges sur les signes. Bien lire les énoncés. Le rendement de Carnot nécessite absolument des Kelvin.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 3 — Quantique -->
+      <a class="bloc-card p2" href="Physique/Quantique&Atome/PhysiqueQuantique&StructureDeLaMatière.html">
+        <div class="card-header">
+          <div class="card-icon">⚛️</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 3 · Physique</div>
+            <div class="card-title">Physique Quantique &amp; Structure de la Matière</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Klechkowski (piège Fe²⁺ !), Bohr mécanique &amp; énergies, De Broglie, effet photoélectrique, puits infini, Schrödinger, Heisenberg.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">3–5 questions</span>
+            <div class="meta-rent" title="Rentabilité très élevée">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Souvent de la vérification de connaissances pures, peu de calculs lourds. Bloc très rapide si bien appris.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 4 — Optique -->
+      <a class="bloc-card p3" href="Physique/Optique/Optique.html">
+        <div class="card-header">
+          <div class="card-icon">🌈</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 4 · Physique</div>
+            <div class="card-title">Optique Ondulatoire &amp; Géométrique</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Lentilles (Descartes, grandissement), fibre optique (ouverture numérique), fentes d'Young, Michelson (lame/coin d'air), diffraction, réseaux.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">3–5 questions</span>
+            <div class="meta-rent" title="Rentabilité moyenne">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star off">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Attention aux formules précises avec cos/sin et différences de marche. Ne pas s'aventurer sans avoir les formules exactes en tête.</div>
+        </div>
+      </a>
+
+      <!-- Bloc 5 — Méca/Élec -->
+      <a class="bloc-card p4" href="Physique/Méca&Electromag/Mécanique&Electromagnétisme.html">
+        <div class="card-header">
+          <div class="card-icon">⚡</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 5 · Physique</div>
+            <div class="card-title">Mécanique &amp; Électromagnétisme</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">Coordonnées cylindriques, pendule, référentiels non-Galiléens, orbites spatiales, Gauss, Ampère, Maxwell, Poynting, filtres RC/RL.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">5–6 questions</span>
+            <div class="meta-rent" title="Rentabilité faible (chronophage)">
+              <span class="star">★</span><span class="star">★</span><span class="star off">★</span><span class="star off">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Bloc le plus calculatoire. À garder pour la fin de l'épreuve, sauf si c'est ton point fort. Cibler le théorème de Gauss et les impédances (rapides).</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ════════════════ LÉGENDE RENTABILITÉ ════════════════ -->
+  <section style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.8rem">
+    <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Légende — Rentabilité Points / Temps de Révision</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem">
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:#b4bdd0">
+        <span style="color:#f59e0b;font-size:.85rem">★★★★★</span> Maximale — points faciles
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:#b4bdd0">
+        <span style="color:#f59e0b;font-size:.85rem">★★★★</span><span style="color:var(--border)">★</span> Très bonne — rentable
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:#b4bdd0">
+        <span style="color:#f59e0b;font-size:.85rem">★★★</span><span style="color:var(--border)">★★</span> Bonne — investissement moyen
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:#b4bdd0">
+        <span style="color:#f59e0b;font-size:.85rem">★★</span><span style="color:var(--border)">★★★</span> Moyenne — cibler les bases
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:#b4bdd0">
+        <span style="color:#f59e0b;font-size:.85rem">★</span><span style="color:var(--border)">★★★★</span> Faible — gouffre à temps
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  GEI-UNIV · Arsenal de Révision · 11 blocs · 22 fichiers · Zéro Faille
+</footer>
+
+</body>
+</html>

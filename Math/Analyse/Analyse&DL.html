@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 1 — Analyse, Développements Limités & Fonctions à 2 Variables</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #4ade80;   /* vert      — DL Usuels */
+    --c2: #f59e0b;   /* ambre     — Hack tangente & asymptote */
+    --c3: #60a5fa;   /* bleu ciel — Hack des limites */
+    --c4: #e879f9;   /* fuchsia   — Convexité & dérivabilité */
+    --c5: #f87171;   /* rouge     — Fonctions 2 variables */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#0b130d 0%,#13181f 55%,#0f0d18 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(74,222,128,.09) 0%,rgba(248,113,113,.06) 60%,transparent 80%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(74,222,128,.3);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c5); border:1px solid rgba(248,113,113,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#bbf7d0 0%,#fde68a 35%,#bfdbfe 65%,#f5d0fe 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s} .section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s} .section:nth-child(4){animation-delay:.15s}
+  .section:nth-child(5){animation-delay:.20s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(74,222,128,.07);  border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(245,158,11,.07);  border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(96,165,250,.07);  border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(232,121,249,.07); border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(248,113,113,.07); border-left:3px solid var(--c5)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+  .hack-box ol,.hack-box ul { padding-left:1.3rem; color:#f0d898; } .hack-box li { margin-bottom:.3rem; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(74,222,128,.15);  color:var(--c1)}
+  .s2 .def-term{background:rgba(245,158,11,.15);  color:var(--c2)}
+  .s3 .def-term{background:rgba(96,165,250,.15);  color:var(--c3)}
+  .s4 .def-term{background:rgba(232,121,249,.15); color:var(--c4)}
+  .s5 .def-term{background:rgba(248,113,113,.15); color:var(--c5)}
+
+  /* DL table */
+  .dl-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+  .dl-table th { font-family:var(--mono); font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; padding:.5rem .85rem; text-align:left; border-bottom:2px solid var(--border); color:var(--muted); }
+  .dl-table td { padding:.55rem .85rem; border-bottom:1px solid rgba(255,255,255,.05); vertical-align:middle; }
+  .dl-table tr:last-child td { border-bottom:none; }
+  .dl-table td:first-child { font-family:var(--mono); font-weight:700; color:var(--c1); white-space:nowrap; width:120px; }
+  .dl-table td:nth-child(2) { color:#c2c9db; }
+  .dl-table td:nth-child(3) { color:var(--muted); font-size:.8rem; font-style:italic; }
+  .dl-table tr.highlight-row td { background:rgba(251,191,36,.05); }
+  .dl-table tr.highlight-row td:first-child { color:var(--c2); }
+
+  /* Hessienne steps */
+  .hess-steps { display:flex; flex-direction:column; gap:.7rem; }
+  .hess-step { display:grid; grid-template-columns:1.8rem 1fr; gap:.7rem; align-items:start; }
+  .hess-num { font-family:var(--mono); font-size:.75rem; font-weight:700; color:var(--c5); background:rgba(248,113,113,.15); border-radius:50%; width:1.7rem; height:1.7rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.1rem; }
+  .hess-content { display:flex; flex-direction:column; gap:.35rem; }
+  .hess-label { font-weight:600; color:var(--text); font-size:.95rem; }
+
+  /* Delta decision tree */
+  .delta-tree { display:flex; flex-direction:column; gap:.55rem; }
+  .delta-case { display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:start; padding:.65rem .9rem; border-radius:7px; }
+  .dc-neg  { background:rgba(248,113,113,.09); border:1px solid rgba(248,113,113,.25); }
+  .dc-pos  { background:rgba(74,222,128,.07);  border:1px solid rgba(74,222,128,.2); }
+  .dc-zero { background:rgba(245,158,11,.06);  border:1px solid rgba(245,158,11,.2); }
+  .dc-badge { font-family:var(--mono); font-size:.78rem; font-weight:700; padding:.2rem .55rem; border-radius:4px; white-space:nowrap; align-self:start; margin-top:.15rem; }
+  .dc-neg  .dc-badge { background:rgba(248,113,113,.2); color:#fca5a5; }
+  .dc-pos  .dc-badge { background:rgba(74,222,128,.18); color:#86efac; }
+  .dc-zero .dc-badge { background:rgba(245,158,11,.18); color:#fcd34d; }
+  .dc-body { font-size:.9rem; color:#c2c9db; }
+  .dc-body strong { color:var(--text); }
+  .dc-sub { display:flex; flex-direction:column; gap:.25rem; padding-left:.5rem; margin-top:.3rem; border-left:2px dashed rgba(255,255,255,.1); }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../../index.html" class="home-btn">← Accueil</a>
+  <style>
+    header {
+      position: relative;
+    }
+
+    .home-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      color: white;
+      text-decoration: none;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+  </style>
+  <div class="bloc-tag">Bloc 1 · Mathématiques · Auto-suffisant</div><span class="version-badge">Boss Final</span>
+  <h1>Analyse, Développements Limités &amp; Fonctions à 2 Variables</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(74,222,128,.3)">01 · DL Usuels en 0</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(245,158,11,.35)">02 · Hack Tangente &amp; Asymptote</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(96,165,250,.35)">03 · Hack des Limites</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(232,121,249,.35)">04 · Convexité &amp; Dérivabilité</span>
+    <span class="toc-chip" style="color:var(--c5);border-color:rgba(248,113,113,.35)">05 · Fonctions à 2 Variables</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Les DL Usuels en 0</h2><span class="icon">📊</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Un <strong>développement limité</strong> (DL) est une approximation polynomiale d'une fonction autour d'un point (ici 0). Plus on garde de termes, plus l'approximation est précise.</p>
+      <p>Les DL sont l'outil universel du concours : ils servent à calculer des <strong>limites</strong> indéterminées, trouver des <strong>asymptotes</strong>, étudier la position d'une courbe par rapport à sa <strong>tangente</strong>, et comparer des infiniment petits.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Formulaire complet — À connaître par cœur</div>
+      <table class="dl-table">
+        <tr>
+          <th>Fonction</th>
+          <th>DL en 0</th>
+          <th>Mnémotechnique</th>
+        </tr>
+        <tr>
+          <td>\(e^x\)</td>
+          <td>\(1 + x + \dfrac{x^2}{2} + \dfrac{x^3}{6} + o(x^3)\)</td>
+          <td>Tout positif, dénominateurs = factorielles</td>
+        </tr>
+        <tr>
+          <td>\(\ln(1+x)\)</td>
+          <td>\(x - \dfrac{x^2}{2} + \dfrac{x^3}{3} - \dfrac{x^4}{4} + o(x^4)\)</td>
+          <td>Signe alterné, dénominateurs = entiers</td>
+        </tr>
+        <tr>
+          <td>\(\ln(1-x)\)</td>
+          <td>\(-x - \dfrac{x^2}{2} - \dfrac{x^3}{3} - \dfrac{x^4}{4} + o(x^4)\)</td>
+          <td>Tout négatif ! (remplace \(x\) par \(-x\))</td>
+        </tr>
+        <tr>
+          <td>\(\sin(x)\)</td>
+          <td>\(x - \dfrac{x^3}{6} + \dfrac{x^5}{120} + o(x^5)\)</td>
+          <td>Puissances impaires, alterné</td>
+        </tr>
+        <tr>
+          <td>\(\cos(x)\)</td>
+          <td>\(1 - \dfrac{x^2}{2} + \dfrac{x^4}{24} + o(x^4)\)</td>
+          <td>Puissances paires, alterné</td>
+        </tr>
+        <tr>
+          <td>\(\dfrac{1}{1-x}\)</td>
+          <td>\(1 + x + x^2 + x^3 + o(x^3)\)</td>
+          <td>Le plus simple : tout positif, coefficients = 1</td>
+        </tr>
+        <tr>
+          <td>\((1+x)^\alpha\)</td>
+          <td>\(1 + \alpha x + \dfrac{\alpha(\alpha-1)}{2}x^2 + o(x^2)\)</td>
+          <td>Binôme généralisé</td>
+        </tr>
+        <tr>
+          <td>\(\sqrt{1+x}\)</td>
+          <td>\(1 + \dfrac{x}{2} - \dfrac{x^2}{8} + o(x^2)\)</td>
+          <td>Cas \(\alpha = 1/2\) du binôme</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>\(\tan(x)\)</td>
+          <td>\(x + \dfrac{x^3}{3} + o(x^3)\)</td>
+          <td>🚨 Tombé 2012 &amp; 2020 — Tout positif !</td>
+        </tr>
+        <tr class="highlight-row">
+          <td>\(\arctan(x)\)</td>
+          <td>\(x - \dfrac{x^3}{3} + \dfrac{x^5}{5} + o(x^5)\)</td>
+          <td>🚨 Tombé 2012 &amp; 2020 — Alterné, s'intègre depuis \(\frac{1}{1+x^2}\)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="note">
+      <strong>Rappel — Comment obtenir \(\arctan\) :</strong> On sait que \((\arctan(x))' = \frac{1}{1+x^2}\). En substituant \(u = -x^2\) dans \(\frac{1}{1-u} = 1 + u + u^2 + \ldots\), on obtient le DL de \(\frac{1}{1+x^2}\), puis on intègre terme à terme pour trouver celui de \(\arctan(x)\).
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Le Hack de la Tangente &amp; de l'Asymptote</h2><span class="icon">📈</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le GEI-UNIV adore donner un DL et poser : <em>"La courbe est-elle au-dessus ou en dessous de sa tangente ?"</em> (tombé en <strong>2022 Q2, 2023 Q2</strong>). La réponse se lit directement sur le premier terme non nul après la partie linéaire.</p>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Règle Zéro Brouillon — Position par rapport à la tangente</div>
+      <p>Si tu calcules un DL et que tu trouves :</p>
+      <p style="text-align:center;margin:.5rem 0;font-family:var(--mono);color:#fcd75a">\(f(x) = \underbrace{A + Bx}_{\text{tangente en 0}} + \underbrace{Cx^k}_{\text{1er terme correctif}} + o(x^k)\)</p>
+      <ol>
+        <li>La <strong>tangente en 0</strong> a pour équation : \(y = A + Bx\).</li>
+        <li>Pour savoir <strong>qui est au-dessus</strong> : regarde le signe de \(Cx^k\).
+          <ul style="margin-top:.3rem">
+            <li>Si \(Cx^k > 0\) → la courbe est <strong>au-dessus</strong> de la tangente.</li>
+            <li>Si \(Cx^k < 0\) → la courbe est <strong>en dessous</strong>.</li>
+          </ul>
+        </li>
+        <li><strong>Piège absolu :</strong> Si \(k\) est <em>impair</em> (ex : \(x^3\)), le signe change selon que \(x > 0\) ou \(x < 0\). La courbe <em>traverse</em> la tangente → <strong>c'est un point d'inflexion !</strong></li>
+      </ol>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Asymptote en l'infini (x → ±∞) — Tombé en 2022 Q3</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Méthode — Substitution h = 1/x</div>
+        <div class="annot-plain">Quand \(x \to \infty\), pose \(h = 1/x\). Quand \(x \to \infty\), \(h \to 0\). Fais un DL de la fonction en \(h\) autour de 0, puis remplace \(h\) par \(1/x\). <strong>L'équation de l'asymptote et sa position apparaîtront seules !</strong></div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Exemple guidé</div>
+        <div class="eq">\(f(x) = x\sqrt{1 + 1/x^2}\)</div>
+        <div class="annot">Pose \(h = 1/x^2\). Alors \(\sqrt{1+h} = 1 + h/2 - h^2/8 + \ldots\). En revenant : \(f(x) = x(1 + \frac{1}{2x^2} + \ldots) = x + \frac{1}{2x} + \ldots\). L'asymptote est \(y = x\) et la courbe est <em>au-dessus</em> (terme \(+\frac{1}{2x} > 0\) pour \(x > 0\)).</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Le Hack des Limites</h2><span class="icon">🎯</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Face à une limite indéterminée du type \(0/0\) ou \(\infty/\infty\), la règle de l'Hôpital est tentante mais <strong>dangereuse</strong> : appliquer l'Hôpital trois fois de suite sur des expressions trigonométriques génère des erreurs de signe quasi-certaines. Les DL sont infiniment plus sûrs et plus rapides.</p>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Règle d'or — N'applique JAMAIS l'Hôpital plus d'une fois</div>
+      <p><strong>Méthode :</strong> Remplace numérateur et dénominateur par leur DL au <em>premier ordre non nul</em>, puis simplifie.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Exemple — Application directe (15 secondes chrono)</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Calcul de la limite</div>
+        <div class="eq">\(\lim_{x \to 0} \dfrac{\sin(x) - x}{x^3}\)</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Étape 1 — DL du numérateur</div>
+        <div class="eq">\(\sin(x) - x = \left(x - \dfrac{x^3}{6} + o(x^3)\right) - x = -\dfrac{x^3}{6} + o(x^3)\)</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Étape 2 — Division et simplification</div>
+        <div class="eq hl">\(\lim_{x \to 0} \dfrac{-x^3/6 + o(x^3)}{x^3} = \lim_{x \to 0} \left(-\dfrac{1}{6} + o(1)\right) = \boxed{-\dfrac{1}{6}}\)</div>
+        <div class="annot">Réglé en 15 secondes. Avec l'Hôpital, il aurait fallu dériver 3 fois et gérer les signes à chaque étape.</div>
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Autres limites classiques à connaître</div>
+      <div class="def-grid">
+        <span class="def-term" style="background:rgba(96,165,250,.15);color:var(--c3)">\(\frac{1-\cos x}{x^2}\)</span>
+        <span class="def-desc" style="color:#f0d898">\(\cos x = 1 - x^2/2 + \ldots\) → limite = <em>\(1/2\)</em></span>
+        <span class="def-term" style="background:rgba(96,165,250,.15);color:var(--c3)">\(\frac{\tan x - x}{x^3}\)</span>
+        <span class="def-desc" style="color:#f0d898">\(\tan x = x + x^3/3 + \ldots\) → limite = <em>\(1/3\)</em></span>
+        <span class="def-term" style="background:rgba(96,165,250,.15);color:var(--c3)">\(\frac{e^x - 1 - x}{x^2}\)</span>
+        <span class="def-desc" style="color:#f0d898">\(e^x = 1 + x + x^2/2 + \ldots\) → limite = <em>\(1/2\)</em></span>
+        <span class="def-term" style="background:rgba(96,165,250,.15);color:var(--c3)">\(\frac{\ln(1+x)}{x}\)</span>
+        <span class="def-desc" style="color:#f0d898">\(\ln(1+x) = x - x^2/2 + \ldots\) → limite = <em>\(1\)</em></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Convexité &amp; Pièges de Dérivabilité</h2><span class="icon">〽️</span></div>
+  <div class="section-body">
+
+    <div class="eq-block">
+      <div class="block-title">Convexité — Les règles dures</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Résumé mnémotechnique</div>
+        <div class="def-grid">
+          <span class="def-term">\(f''(x) > 0\)</span><span class="def-desc"><em>Convexe</em> — la courbe "sourit" 😊. Elle est <strong>au-dessus</strong> de toutes ses tangentes et <strong>au-dessous</strong> de toutes ses cordes.</span>
+          <span class="def-term">\(f''(x) < 0\)</span><span class="def-desc"><em>Concave</em> — la courbe "pleure" 😢. Elle est <strong>en dessous</strong> de ses tangentes et <strong>au-dessus</strong> de ses cordes.</span>
+          <span class="def-term">Inflexion</span><span class="def-desc">\(f''(x)\) s'annule <strong>EN CHANGEANT de signe</strong>. La courbe passe de convexe à concave (ou inversement).</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">⚠ Piège — \(f''(a) = 0\) ne suffit PAS pour conclure à un inflexion</div>
+      <p><strong>Contre-exemple classique :</strong> \(f(x) = x^4\).</p>
+      <p>\(f''(x) = 12x^2\) → \(f''(0) = 0\). Pourtant \(f''(x) \geq 0\) <em>partout</em> : elle ne change pas de signe en 0. Donc \(x = 0\) est un <strong>minimum</strong>, pas un point d'inflexion !</p>
+      <p><strong>Règle à retenir :</strong> Pour un point d'inflexion, il faut que \(f''\) s'annule <em>ET change de signe</em>.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Le Piège du Raccordement de Dérivabilité — Tombé en 2019 Q4</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">La méthode du théorème</div>
+        <div class="annot-plain">Si \(\lim_{x \to a} f'(x)\) existe, alors \(f\) est dérivable en \(a\) et \(f'(a)\) vaut cette limite. C'est le cas "facile".</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Le cas difficile — \(f(x) = x^2 \sin(1/x)\) avec \(f(0) = 0\)</div>
+        <div class="eq">\(f'(x) = 2x\sin(1/x) - \cos(1/x) \quad \text{pour } x \neq 0\)</div>
+        <div class="annot">Le terme \(\cos(1/x)\) oscille entre \(-1\) et \(+1\) sans jamais converger quand \(x \to 0\). On croirait que \(f'(0)\) n'existe pas. <strong>FAUX.</strong></div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Revenir au taux d'accroissement quand f' oscille</div>
+      <p>Si \(f'(x)\) n'a pas de limite (oscillations), <strong>abandonne \(f'(x)\)</strong> et calcule directement le taux d'accroissement :</p>
+      <p style="text-align:center;margin:.5rem 0">\[\frac{f(x) - f(0)}{x - 0} = \frac{x^2 \sin(1/x)}{x} = x\sin(1/x)\]</p>
+      <p>Le sinus est <strong>borné</strong> (entre \(-1\) et \(1\)) et \(x \to 0\). Donc \(x \cdot \text{borné} \to 0\).</p>
+      <p><strong>→ \(f\) EST dérivable en 0 et \(f'(0) = 0\).</strong> La dérivée existe même si elle n'est pas continue !</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 05 ════════════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Fonctions à 2 Variables — Le Boss Final</h2><span class="icon">🗻</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le GEI-UNIV pose <strong>chaque année</strong> un exercice sur la recherche des extrema locaux d'une fonction \(f(x,y)\) (tombé en <strong>2019 Q18, 2020 Q20, 2022 Q4, 2025 Q9</strong>). La méthode est toujours la même : gradient nul → Hessienne.</p>
+      <p>Le point clé : un <strong>point critique</strong> (gradient nul) n'est pas forcément un extremum — il peut aussi être un <em>point col</em> (ou point selle), qui ressemble à une montagne dans une direction et une vallée dans une autre.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Méthode Hessienne (Notations de Monge) — 3 étapes</div>
+
+      <div class="hess-steps">
+
+        <div class="hess-step">
+          <div class="hess-num">1</div>
+          <div class="hess-content">
+            <div class="hess-label">Trouver les points critiques — Annuler le gradient</div>
+            <div class="eq">\(\dfrac{\partial f}{\partial x} = 0 \quad \textbf{ET} \quad \dfrac{\partial f}{\partial y} = 0\)</div>
+            <div class="annot">Résoudre le système simultané. Les solutions \((x_0, y_0)\) sont les candidats à être des extrema. Les deux conditions doivent être satisfaites <em>ensemble</em>.</div>
+          </div>
+        </div>
+
+        <div class="hess-step">
+          <div class="hess-num">2</div>
+          <div class="hess-content">
+            <div class="hess-label">Calculer les dérivées secondes en ce point</div>
+            <div class="def-grid">
+              <span class="def-term">r</span><span class="def-desc">\(r = \dfrac{\partial^2 f}{\partial x^2}\Big|_{(x_0,y_0)}\)</span>
+              <span class="def-term">t</span><span class="def-desc">\(t = \dfrac{\partial^2 f}{\partial y^2}\Big|_{(x_0,y_0)}\)</span>
+              <span class="def-term">s</span><span class="def-desc">\(s = \dfrac{\partial^2 f}{\partial x \partial y}\Big|_{(x_0,y_0)}\)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hess-step">
+          <div class="hess-num">3</div>
+          <div class="hess-content">
+            <div class="hess-label">Calculer le discriminant Δ = rt − s² et conclure</div>
+            <div class="eq hl">\(\Delta = r \cdot t - s^2\)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Tableau de décision selon Δ</div>
+      <div class="delta-tree">
+
+        <div class="delta-case dc-neg">
+          <span class="dc-badge">Δ &lt; 0</span>
+          <div class="dc-body">
+            <strong>Point Col</strong> (ou point selle) → <strong>pas d'extremum.</strong><br>
+            La fonction monte dans une direction et descend dans l'autre. Comme un col de montagne.
+          </div>
+        </div>
+
+        <div class="delta-case dc-pos">
+          <span class="dc-badge">Δ &gt; 0</span>
+          <div class="dc-body">
+            <strong>Extremum local</strong> → regarder le signe de \(r\) pour distinguer :
+            <div class="dc-sub">
+              <span>Si \(r > 0\) → <strong>Minimum local</strong> (la surface "sourit" dans les deux directions).</span>
+              <span>Si \(r < 0\) → <strong>Maximum local</strong> (la surface "pleure" dans les deux directions).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="delta-case dc-zero">
+          <span class="dc-badge">Δ = 0</span>
+          <div class="dc-body">
+            <strong>Cas douteux</strong> — on ne peut pas conclure avec cette méthode. Très rare au concours : si tu obtiens \(\Delta = 0\), vérifie ton calcul d'abord.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Résumé stratégique — Ce que le concours attend</div>
+      <ul>
+        <li>Calculer proprement \(\partial f/\partial x\) et \(\partial f/\partial y\) et résoudre le système.</li>
+        <li>Calculer \(r\), \(s\), \(t\) et \(\Delta = rt - s^2\) au point critique.</li>
+        <li>Conclure : col si \(\Delta < 0\), extremum si \(\Delta > 0\) (puis signe de \(r\)).</li>
+        <li>Ne pas oublier que <strong>plusieurs points critiques</strong> sont possibles — tester chacun séparément.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>
