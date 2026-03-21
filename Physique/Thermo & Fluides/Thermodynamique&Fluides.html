@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 2 — Thermodynamique & Fluides (Version Ultime)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --surface2:#1c2133;
+    --border:  #252c3e;
+    --c1: #5b8dee;
+    --c2: #fb7185;
+    --c3: #a78bfa;
+    --c4: #34d399;
+    --c5: #fbbf24;
+    --c6: #38bdf8;
+    --c7: #f4845f;
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#0d1220 0%,#141928 60%,#0f1730 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(91,141,238,.13) 0%,transparent 70%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(91,141,238,.35);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c2); border:1px solid rgba(251,113,133,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#d4e2ff 0%,#a5c0ff 50%,#c7b8ff 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip {
+    font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px;
+    border:1px solid; cursor:default; transition:transform .15s;
+  }
+  .toc-chip:hover { transform:translateY(-2px); }
+  .toc-chip.is-new::after { content:' ✦'; font-size:.6rem; opacity:.8; }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s}.section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s}.section:nth-child(4){animation-delay:.15s}
+  .section:nth-child(5){animation-delay:.20s}.section:nth-child(6){animation-delay:.25s}
+  .section:nth-child(7){animation-delay:.30s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+  .new-badge {
+    font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase;
+    background:rgba(251,113,133,.18); color:var(--c2); border:1px solid rgba(251,113,133,.3);
+    padding:.15rem .5rem; border-radius:3px;
+  }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)} .s6 .section-header{border-left:4px solid var(--c6)}
+  .s7 .section-header{border-left:4px solid var(--c7)}
+
+  .ctx {
+    background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12);
+    padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative;
+  }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(91,141,238,.08); border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(251,113,133,.08);border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(167,139,250,.08);border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(52,211,153,.08); border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(251,191,36,.08); border-left:3px solid var(--c5)}
+  .s6 .eq-block{background:rgba(56,189,248,.08); border-left:3px solid var(--c6)}
+  .s7 .eq-block{background:rgba(244,132,95,.08); border-left:3px solid var(--c7)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; font-family:var(--mono); font-size:1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .sub-eq { margin-left:1.2rem; border-left:2px dashed rgba(255,255,255,.1); padding-left:1rem; display:flex; flex-direction:column; gap:.5rem; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; display:flex; align-items:center; gap:.4rem; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { display:flex; align-items:center; gap:.4rem; color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; } .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.25rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .subsection-label { font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; padding:.35rem .75rem; border-radius:4px; display:inline-block; background:rgba(56,189,248,.12); color:var(--c6); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(91,141,238,.15);color:var(--c1)} .s2 .def-term{background:rgba(251,113,133,.15);color:var(--c2)}
+  .s3 .def-term{background:rgba(167,139,250,.15);color:var(--c3)} .s4 .def-term{background:rgba(52,211,153,.15);color:var(--c4)}
+  .s5 .def-term{background:rgba(251,191,36,.15);color:var(--c5)} .s6 .def-term{background:rgba(56,189,248,.15);color:var(--c6)}
+  .s7 .def-term{background:rgba(244,132,95,.15);color:var(--c7)}
+
+  .cmp-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  .cmp-table th { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; padding:.55rem .9rem; text-align:left; border-bottom:2px solid var(--border); color:var(--muted); }
+  .cmp-table td { padding:.6rem .9rem; border-bottom:1px solid rgba(255,255,255,.05); color:#c2c9db; vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+  .cmp-table td:first-child { font-weight:600; color:var(--text); white-space:nowrap; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bloc-tag">Bloc 2 · Physique · Auto-suffisant</div><span class="version-badge">Version Ultime</span>
+  <h1>Thermodynamique &amp; Fluides</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(91,141,238,.35)">01 · Thermo &amp; Entropie</span>
+    <span class="toc-chip is-new" style="color:var(--c2);border-color:rgba(251,113,133,.35)">02 · Squelette Calculatoire</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(167,139,250,.35)">03 · Modèles de Gaz</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(52,211,153,.35)">04 · Machines &amp; Cycles</span>
+    <span class="toc-chip" style="color:var(--c5);border-color:rgba(251,191,36,.35)">05 · Corps Noir</span>
+    <span class="toc-chip" style="color:var(--c6);border-color:rgba(56,189,248,.35)">06 · Statique des Fluides</span>
+    <span class="toc-chip" style="color:var(--c7);border-color:rgba(244,132,95,.35)">07 · Transferts Thermiques</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Thermodynamique &amp; Entropie</h2><span class="icon">⚡</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Qu'est-ce que la thermodynamique ?</strong> C'est la branche de la physique qui étudie les <strong>échanges d'énergie</strong> dans un système physique. Elle repose sur deux grands principes.</p>
+      <p>→ Le <strong>1er principe</strong> dit que l'énergie se <em>conserve</em> : elle change juste de forme (travail ou chaleur), elle ne se crée ni ne se détruit.</p>
+      <p>→ Le <strong>2nd principe</strong> dit que les phénomènes physiques ont un <em>sens irréversible</em> : la chaleur va spontanément du chaud vers le froid, jamais l'inverse. Ce principe introduit l'<strong>Entropie \(S\)</strong>, une grandeur qui mesure le "désordre" et indique le sens naturel de l'évolution du système.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Équations fondamentales</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">1er Principe — Bilan d'énergie</div>
+        <div class="eq hl">\(\Delta U = W + Q\)</div>
+        <div class="annot">La <strong>variation d'énergie interne \(U\)</strong> = Travail \(W\) reçu + Chaleur \(Q\) reçue.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">2nd Principe — Bilan d'entropie</div>
+        <div class="eq hl">\(\Delta S = S_{\text{échange}} + S_{\text{création}}\)</div>
+        <div class="sub-eq">
+          <div class="eq-name-tag">Entropie échangée avec l'extérieur</div>
+          <div class="eq">\(S_{\text{échange}} = \displaystyle\int \frac{\delta Q}{T_{\text{ext}}}\)</div>
+          <div class="annot">Même signe que \(Q\). Si le système refroidit : \(S_{\text{échange}} < 0\). C'est l'entropie qui "rentre" ou "sort" via les échanges thermiques avec l'environnement (de temp. \(T_{\text{ext}}\)). Unité : <strong>J/K</strong>.</div>
+          <div class="eq-name-tag" style="margin-top:.4rem">Entropie créée à l'intérieur</div>
+          <div class="eq">\(S_{\text{création}} \geq 0\)</div>
+          <div class="annot"><strong>Nulle</strong> pour une transformation réversible (idéale). <strong>Strictement positive</strong> pour toute transformation réelle (irréversible). Elle ne peut jamais être négative.</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="def-grid">
+        <span class="def-term">Unité de S</span>
+        <span class="def-desc">\(S = Q/T\) → Énergie / Température → <em>J/K</em></span>
+        <span class="def-term">Extensivité</span>
+        <span class="def-desc">Grandeur <em>extensive</em> : doubler le système double S. Contrairement à la température qui est <em>intensive</em> (doubler le système ne change pas T).</span>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-title">⚠ Piège — Système Isolé (tombé en 2023 &amp; 2025)</div>
+      <p>Un système isolé n'échange <em>rien</em> : \(Q = 0\) et \(W = 0\) → \(S_{\text{échange}} = 0\).</p>
+      <p>Le bilan devient : \(\Delta S = S_{\text{création}} \geq 0\).</p>
+      <p><strong>→ L'entropie d'un système isolé ne peut qu'augmenter — elle n'est jamais nulle !</strong> L'erreur classique est de croire \(\Delta S = 0\) car "pas d'échange". Faux : \(S_{\text{création}}\) reste positive.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 NOUVEAU ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Squelette Calculatoire — Énergie, Enthalpie &amp; Laplace</h2><span class="new-badge">Nouveau</span><span class="icon">🧮</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Pourquoi cette section ?</strong> La thermodynamique, c'est d'abord des concepts, mais c'est ensuite un "squelette calculatoire" implacable. Pour <em>calculer concrètement</em> le travail ou la chaleur d'une transformation et obtenir une valeur numérique, il faut lier l'énergie à la température via les <strong>capacités thermiques</strong>.</p>
+      <p>Il en existe deux selon les conditions : à <em>volume constant</em> (\(C_v\)) ou à <em>pression constante</em> (\(C_p\)). Ces formules sont indispensables pour tout exercice numérique.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Lois de Joule — Gaz Parfait</div>
+      <div class="annot-plain" style="margin-bottom:.2rem">Pour un gaz parfait, \(U\) et \(H\) ne dépendent <strong>que de la température</strong> (pas du volume ni de la pression). C'est la propriété fondamentale du gaz parfait.</div>
+      <div class="grid2">
+        <div class="eq-row">
+          <div class="eq-name-tag">Énergie interne</div>
+          <div class="eq hl">\(dU = n \cdot C_v \cdot dT\)</div>
+          <div class="annot">Sert à calculer \(\Delta U\). \(C_v\) = capacité thermique à <em>volume constant</em>.</div>
+        </div>
+        <div class="eq-row">
+          <div class="eq-name-tag">Enthalpie</div>
+          <div class="eq hl">\(dH = n \cdot C_p \cdot dT\)</div>
+          <div class="annot">\(C_p\) = capacité thermique à <em>pression constante</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Relations entre Cv, Cp et γ</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Relation de Mayer</div>
+        <div class="eq hl">\(C_p - C_v = nR\)</div>
+        <div class="annot">Toujours vraie pour un gaz parfait. Permet de calculer l'une si l'autre est connue. \(R = 8{,}314\;\text{J·mol}^{-1}\text{·K}^{-1}\).</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Coefficient adiabatique γ (gamma)</div>
+        <div class="eq hl">\(\gamma = \dfrac{C_p}{C_v}\)</div>
+        <div class="annot">Rapport des capacités thermiques. <strong>Pour l'air (diatomique) : \(\gamma = 1{,}4\)</strong>. Valeur à retenir par cœur.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Lois de Laplace — Transformation Adiabatique Réversible</div>
+      <div class="annot-plain" style="margin-bottom:.3rem">Lors d'une transformation <strong>adiabatique réversible</strong> (\(Q = 0\) + réversible), \(P\), \(V\), \(T\) sont liés par ces équations. Vitales pour trouver un volume ou une température finale à partir des conditions initiales.</div>
+      <div class="grid2">
+        <div class="eq-row">
+          <div class="eq-name-tag">Relation P–V</div>
+          <div class="eq hl">\(P \cdot V^\gamma = \text{constante}\)</div>
+        </div>
+        <div class="eq-row">
+          <div class="eq-name-tag">Relation T–V</div>
+          <div class="eq hl">\(T \cdot V^{\gamma - 1} = \text{constante}\)</div>
+        </div>
+      </div>
+      <div class="annot">Ces deux relations découlent des lois de Joule + 1er principe + \(PV = nRT\). Elles sont le "squelette calculatoire" de toute adiabatique réversible.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Modèles de Gaz — Parfait vs. Réel</h2><span class="icon">⚗️</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Le gaz parfait</strong> est un modèle idéal : molécules <em>ponctuelles sans volume</em>, <em>aucune interaction</em> entre elles. Utile pour les calculs, mais irréaliste.</p>
+      <p><strong>Le gaz réel — modèle de Van der Waals (tombé en 2025)</strong> : les molécules ont une vraie taille (elles prennent de la place) et <em>interagissent</em> entre elles (forces attractives à longue distance, répulsives à très courte distance).</p>
+    </div>
+    <table class="cmp-table">
+      <tr><th>Modèle</th><th>Hypothèses physiques</th><th>Équation d'état</th></tr>
+      <tr><td>Gaz Parfait</td><td>Molécules ponctuelles, aucune interaction</td><td>\(PV = nRT\)</td></tr>
+      <tr><td>Van der Waals</td><td>Volume propre + forces attractives et répulsives</td><td>\(\left(P + \dfrac{n^2 a}{V^2}\right)(V - nb) = nRT\)</td></tr>
+    </table>
+    <div class="eq-block">
+      <div class="block-title">Décryptage des termes — très testé au concours</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Le Covolume : terme (V − nb)</div>
+        <div class="annot"><strong>b</strong> = volume propre d'une mole de molécules. L'espace réellement disponible n'est pas \(V\) mais \((V-nb)\). Modélise les forces <strong>répulsives</strong> à courte distance : deux molécules ne peuvent pas se "rentrer dedans".</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">La Pression Interne : terme (P + n²a/V²)</div>
+        <div class="annot">Les molécules <strong>s'attirent</strong>. Avant d'atteindre la paroi, une molécule est <em>retenue en arrière</em>. La <strong>pression réelle \(P\) est plus faible</strong> que la pression idéale. On ajoute \(\frac{n^2 a}{V^2}\) pour corriger cet écart. Le coefficient <strong>a</strong> mesure l'intensité des forces <strong>attractives</strong>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Machines &amp; Cycles Thermodynamiques</h2><span class="icon">⚙️</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Pour créer un moteur ou un réfrigérateur, on fait subir à un gaz une <strong>suite de transformations</strong> qui reviennent au point de départ : c'est un <em>cycle</em>. On représente ces cycles sur un <strong>diagramme P–V</strong> (pression vs volume) : <strong>l'aire enfermée par le cycle = travail total échangé</strong>.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Transformations clés</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Travail général</div>
+        <div class="eq">\(\delta W = -P_{\text{ext}}\,dV\)</div>
+        <div class="annot">Détente \((dV>0)\) → \(W<0\) : le gaz fournit un effort. Compression \((dV<0)\) → \(W>0\) : l'extérieur comprime le gaz.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Isotherme — T = constante</div>
+        <div class="eq">\(\Delta U = 0 \;\Rightarrow\; W = -Q\)</div>
+        <div class="eq hl">\(W = -nRT\ln\!\left(\dfrac{V_2}{V_1}\right)\)</div>
+        <div class="annot">La loi de Joule garantit \(\Delta U = 0\) si T est constante. On substitue \(P = nRT/V\) avant d'intégrer.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Adiabatique — Q = 0</div>
+        <div class="eq">\(Q = 0 \;\Rightarrow\; \Delta U = W\)</div>
+        <div class="annot">Compression adiabatique → le gaz <em>chauffe</em>. Détente → il <em>refroidit</em>. Les lois de Laplace s'appliquent (voir section 02).</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Cycle de Carnot &amp; Rendement Maximal (tombé en 2022)</div>
+      <div class="annot-plain" style="margin-bottom:.3rem">
+        Le <strong>cycle de Carnot</strong> (2 isothermes + 2 adiabatiques) est le cycle idéal parfait. Il définit le <strong>rendement maximal théorique</strong> de tout moteur fonctionnant entre deux sources de température. Aucun moteur réel ne peut dépasser ce rendement.
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Rendement de Carnot η</div>
+        <div class="eq hl">\(\eta = 1 - \dfrac{T_F}{T_C}\)</div>
+        <div class="def-grid" style="margin-top:.4rem">
+          <span class="def-term">T_C</span><span class="def-desc">Température de la source <em>chaude</em> — obligatoirement en <strong>Kelvin</strong></span>
+          <span class="def-term">T_F</span><span class="def-desc">Température de la source <em>froide</em> — obligatoirement en <strong>Kelvin</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">🚨 Piège absolu — Unités de température</div>
+      <p>Les températures dans \(\eta = 1 - T_F/T_C\) doivent <strong>OBLIGATOIREMENT être en Kelvin</strong>.</p>
+      <p><strong>Conversion :</strong> \(T(\text{K}) = T(°\text{C}) + 273{,}15\)</p>
+      <p>Utiliser des °C donne un résultat faux. C'est l'erreur la plus fréquente sur ce concours.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 05 ════════════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Rayonnement Thermique — Le Corps Noir</h2><span class="icon">☀️</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Tout objet ayant une température émet de la lumière.</strong> La couleur et l'intensité dépendent de T. Un <strong>"corps noir"</strong> théorique absorbe <em>toute</em> la lumière reçue et réémet un spectre parfaitement défini ne dépendant <em>que</em> de sa température (pas de sa forme ni de sa matière).</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Équations fondamentales</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Formule de Planck — Distribution spectrale</div>
+        <div class="eq hl">\(\rho(\nu,T) = \dfrac{8\pi h\nu^3}{c^3}\cdot\dfrac{1}{e^{h\nu/k_BT}-1}\)</div>
+        <div class="annot">Densité d'énergie par unité de fréquence. Unité : <strong>J·m⁻³·Hz⁻¹</strong>. La constante de Planck <strong>\(h\)</strong> prouve que l'énergie EM est <em>quantifiée</em> (valeurs discrètes multiples de \(h\nu\)) — c'est la porte d'entrée vers la physique quantique.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Loi de Wien — Longueur d'onde dominante</div>
+        <div class="eq hl">\(\lambda_{\max} \cdot T = \text{constante} \quad\left(\lambda_{\max} = \frac{A}{T}\right)\)</div>
+        <div class="annot">Plus chaud → émission vers <em>courtes longueurs d'onde</em> (UV/bleu). Plus froid → émission vers <em>grandes longueurs d'onde</em> (infrarouge).</div>
+      </div>
+    </div>
+    <div class="concours">
+      <div class="concours-title">★ Applications directes au concours</div>
+      <div class="def-grid">
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c5)">300 K</span>
+        <span class="def-desc" style="color:#f0d898">Température ambiante → \(\lambda_{\max} \approx 10\,\mu m\) → <em>Infrarouge</em>. Invisible à l'œil. Principe des caméras thermiques.</span>
+        <span class="def-term" style="background:rgba(251,191,36,.15);color:var(--c5)">6000 K</span>
+        <span class="def-desc" style="color:#f0d898">Surface du Soleil → \(\lambda_{\max} \approx 0{,}5\,\mu m\) → <em>Jaune-vert visible</em>. Nos yeux ont évolué pour être sensibles à la longueur d'onde que le Soleil émet le plus.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 06 ════════════════ -->
+<div class="section s6">
+  <div class="section-header"><span class="num">06</span><h2 style="color:var(--c6)">Statique des Fluides &amp; Archimède</h2><span class="icon">🌊</span></div>
+  <div class="section-body">
+
+    <div class="subsection-label">A — Fluides Incompressibles (L'eau)</div>
+
+    <div class="ctx">
+      <p><strong>Pourquoi la pression augmente-t-elle en profondeur ?</strong> Plus on descend, plus il y a de fluide qui "pèse" au-dessus. La <strong>poussée d'Archimède</strong> naît de la différence de pression entre la face inférieure d'un objet immergé (plus de pression) et sa face supérieure → force nette vers le <em>haut</em>. Si l'objet est moins dense que le fluide, cette force dépasse son poids → il flotte.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Équations fondamentales</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Hydrostatique — Pression en profondeur</div>
+        <div class="eq hl">\(\Delta P = \rho_{\text{fluide}} \cdot g \cdot \Delta z\)</div>
+        <div class="annot">La pression augmente <strong>linéairement</strong> avec la profondeur. ⚠ Si l'axe \(z\) pointe vers le <em>haut</em> : \(dP = -\rho g\,dz\) (pression diminue quand on monte).</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Poussée d'Archimède</div>
+        <div class="eq hl">\(\vec{\Pi}_A = -\rho_{\text{fluide}} \cdot V_{\text{immergé}} \cdot \vec{g}\)</div>
+        <div class="annot">Force = opposé du poids du volume de fluide déplacé. Orientée vers le haut (opposée à \(\vec{g}\)).</div>
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Exercice type — Cylindre de rayon R immergé sur hauteur h</div>
+      <ul>
+        <li><strong>Volume immergé :</strong> \(V_{\text{immergé}} = \pi R^2 h\)</li>
+        <li><strong>Masse d'eau déplacée :</strong> \(m_{\text{eau}} = \rho_{\text{eau}} \cdot \pi R^2 h\)</li>
+        <li><strong>Équilibre :</strong> \(\text{Poids} = \Pi_A\)</li>
+      </ul>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">🧊 Piège ultime — Le glaçon (tombé en 2022)</div>
+      <p><strong>Situation :</strong> Un glaçon flotte dans un verre d'eau rempli à ras bord. Il fond. Que fait le niveau ?</p>
+      <p><strong>Réponse : Il reste exactement le même.</strong></p>
+      <p>En flottant, le glaçon déplace un volume d'eau <em>égal à son poids</em>. En fondant, il donne exactement ce volume en eau liquide. Le volume d'eau liquide issu de la fonte est <em>exactement égal</em> au volume immergé du glaçon. Bilan : zéro changement de niveau.</p>
+    </div>
+
+    <div class="sep"></div>
+    <div class="subsection-label">B — Fluides Compressibles (L'atmosphère) <span class="new-badge" style="margin-left:.5rem">Nouveau</span></div>
+
+    <div class="ctx">
+      <p><strong>Pourquoi l'atmosphère est-elle différente de l'eau ?</strong> L'air est <em>compressible</em> : sa densité change avec la pression. Sous son propre poids, l'air en bas est plus comprimé (plus dense) qu'en haut. La pression ne diminue donc <em>pas</em> linéairement avec l'altitude, mais de façon <strong>exponentielle</strong>.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Loi de Nivellement Barométrique — Atmosphère Isotherme (tombé en 2022)</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Pression en fonction de l'altitude z</div>
+        <div class="eq hl">\(P(z) = P(0) \cdot e^{-\dfrac{M \cdot g \cdot z}{R \cdot T}}\)</div>
+        <div class="def-grid" style="margin-top:.5rem">
+          <span class="def-term">P(0)</span><span class="def-desc">Pression au sol (référence)</span>
+          <span class="def-term">M</span><span class="def-desc">Masse molaire de l'air ≈ <em>0,029 kg/mol</em></span>
+          <span class="def-term">g</span><span class="def-desc">Accélération gravitationnelle ≈ <em>9,81 m/s²</em></span>
+          <span class="def-term">R</span><span class="def-desc">Constante des gaz : <em>8,314 J·mol⁻¹·K⁻¹</em></span>
+          <span class="def-term">T</span><span class="def-desc">Température en <em>Kelvin</em> — supposée constante dans ce modèle isotherme</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════ 07 ════════════════ -->
+<div class="section s7">
+  <div class="section-header"><span class="num">07</span><h2 style="color:var(--c7)">Transferts Thermiques — Propagation de la chaleur</h2><span class="icon">🌡️</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Comment la chaleur voyage-t-elle dans un solide ?</strong> Par <strong>conduction</strong> : les atomes chauds vibrent et transmettent cette agitation à leurs voisins. La chaleur va spontanément des zones <em>chaudes → froides</em>. ⚠ La conduction <em>ne fonctionne pas dans le vide</em> : il faut un milieu matériel.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Équations fondamentales</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Loi de Fourier — Flux thermique local</div>
+        <div class="eq hl">\(\vec{j}_Q = -\kappa \,\overrightarrow{\text{grad}}\, T\)</div>
+        <div class="annot">Le <strong>vecteur densité de flux thermique</strong> est proportionnel au gradient de T.</div>
+        <div class="def-grid" style="margin-top:.4rem">
+          <span class="def-term">Signe −</span><span class="def-desc">La chaleur <em>fuit les hautes températures</em> : flux orienté du chaud vers le froid, en sens opposé au gradient.</span>
+          <span class="def-term">κ (kappa)</span><span class="def-desc">Conductivité thermique — unité : <em>W·m⁻¹·K⁻¹</em>. Plus κ grand → meilleur conducteur.</span>
+        </div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Équation de la chaleur — Évolution temporelle</div>
+        <div class="eq hl">\(\dfrac{\partial T}{\partial t} = \alpha \,\Delta T\)</div>
+        <div class="annot">Décrit comment la température évolue dans le temps en tout point du solide.</div>
+        <div class="def-grid" style="margin-top:.4rem">
+          <span class="def-term">α (alpha)</span><span class="def-desc">Diffusivité thermique — unité : <em>m²/s</em>. Vitesse à laquelle la chaleur se répand.</span>
+          <span class="def-term">ΔT (Laplacien)</span><span class="def-desc">Mesure la "courbure" du champ de température dans l'espace. Non nul = répartition spatiale non uniforme.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>

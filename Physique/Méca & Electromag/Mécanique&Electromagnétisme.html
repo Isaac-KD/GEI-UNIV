@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 5 — Mécanique & Électromagnétisme (Version Définitive)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    macros: {
+      oiint: "\\unicode{x222F}"
+    }
+  }
+};
+</script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #5b8dee;   /* bleu      — Coordonnées & Pendules */
+    --c2: #fb7185;   /* rose      — Référentiels Non-Galiléens */
+    --c3: #34d399;   /* vert      — Mécanique Spatiale */
+    --c4: #fbbf24;   /* ambre     — Électrostatique Gauss */
+    --c5: #a78bfa;   /* violet    — Ampère */
+    --c6: #38bdf8;   /* cyan      — Maxwell & OPPH */
+    --c7: #f4845f;   /* corail    — Électrocinétique */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#0d1220 0%,#14192a 55%,#0f1225 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(167,139,250,.11) 0%,transparent 70%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c5); border:1px solid rgba(167,139,250,.35);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c3); border:1px solid rgba(52,211,153,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#c7d8ff 0%,#e0d4ff 50%,#b8f0e0 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+  .toc-chip.is-new::after { content:' ✦'; font-size:.6rem; opacity:.8; }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s}.section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s}.section:nth-child(4){animation-delay:.15s}
+  .section:nth-child(5){animation-delay:.20s}.section:nth-child(6){animation-delay:.25s}
+  .section:nth-child(7){animation-delay:.30s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+  .new-badge { font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; background:rgba(52,211,153,.15); color:var(--c3); border:1px solid rgba(52,211,153,.3); padding:.15rem .5rem; border-radius:3px; }
+  .hack-badge { font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; background:rgba(251,191,36,.15); color:var(--c4); border:1px solid rgba(251,191,36,.3); padding:.15rem .5rem; border-radius:3px; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)} .s6 .section-header{border-left:4px solid var(--c6)}
+  .s7 .section-header{border-left:4px solid var(--c7)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(91,141,238,.08); border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(251,113,133,.08);border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(52,211,153,.08); border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(251,191,36,.08); border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(167,139,250,.08);border-left:3px solid var(--c5)}
+  .s6 .eq-block{background:rgba(56,189,248,.08); border-left:3px solid var(--c6)}
+  .s7 .eq-block{background:rgba(244,132,95,.08); border-left:3px solid var(--c7)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .sub-eq { margin-left:1.2rem; border-left:2px dashed rgba(255,255,255,.1); padding-left:1rem; display:flex; flex-direction:column; gap:.5rem; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  /* Hack box — gold highlight */
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; display:flex; align-items:center; gap:.4rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(91,141,238,.15);color:var(--c1)} .s2 .def-term{background:rgba(251,113,133,.15);color:var(--c2)}
+  .s3 .def-term{background:rgba(52,211,153,.15);color:var(--c3)} .s4 .def-term{background:rgba(251,191,36,.15);color:var(--c4)}
+  .s5 .def-term{background:rgba(167,139,250,.15);color:var(--c5)} .s6 .def-term{background:rgba(56,189,248,.15);color:var(--c6)}
+  .s7 .def-term{background:rgba(244,132,95,.15);color:var(--c7)}
+
+  .cmp-table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  .cmp-table th { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; padding:.55rem .9rem; text-align:left; border-bottom:2px solid var(--border); color:var(--muted); }
+  .cmp-table td { padding:.6rem .9rem; border-bottom:1px solid rgba(255,255,255,.05); color:#c2c9db; vertical-align:top; }
+  .cmp-table tr:last-child td { border-bottom:none; }
+  .cmp-table td:first-child { font-weight:600; color:var(--text); }
+  .cmp-table td:nth-child(2) { text-align:center; }
+  .cmp-table td:nth-child(3) { text-align:center; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+
+  /* Maxwell numbered list */
+  .maxwell-list { display:flex; flex-direction:column; gap:.6rem; }
+  .maxwell-item { display:grid; grid-template-columns:1.8rem 1fr; gap:.6rem; align-items:start; }
+  .maxwell-num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--c6); background:rgba(56,189,248,.15); border-radius:50%; width:1.6rem; height:1.6rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.15rem; }
+  .maxwell-eq { display:flex; flex-direction:column; gap:.3rem; }
+  .maxwell-label { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bloc-tag">Bloc 5 · Physique · Auto-suffisant</div><span class="version-badge">Zéro Faille</span>
+  <h1>Mécanique &amp; Électromagnétisme</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(91,141,238,.35)">01 · Coordonnées &amp; Pendules</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(251,113,133,.35)">02 · Référentiels Non-Galiléens</span>
+    <span class="toc-chip is-new" style="color:var(--c3);border-color:rgba(52,211,153,.35)">03 · Mécanique Spatiale</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(251,191,36,.35)">04 · Théorème de Gauss</span>
+    <span class="toc-chip is-new" style="color:var(--c5);border-color:rgba(167,139,250,.35)">05 · Théorème d'Ampère</span>
+    <span class="toc-chip is-new" style="color:var(--c6);border-color:rgba(56,189,248,.35)">06 · Maxwell &amp; OPPH</span>
+    <span class="toc-chip" style="color:var(--c7);border-color:rgba(244,132,95,.35)">07 · Électrocinétique</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════════ 01 ════════════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Mécanique : Coordonnées &amp; Pendules</h2><span class="icon">🌀</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Le concours privilégie les problèmes de <strong>rotation</strong> (pendules, planètes, satellites) qui exigent les coordonnées polaires ou cylindriques. Le piège classique est de mal dériver les vecteurs unitaires mobiles \(\vec{u}_r\) et \(\vec{u}_\theta\), qui <em>changent de direction</em> au cours du temps, contrairement aux vecteurs cartésiens fixes.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Coordonnées cylindriques — Équations dures à réécrire</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Vecteur position</div>
+        <div class="eq hl">\(\vec{OM} = r\vec{u}_r + z\vec{u}_z\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Vecteur vitesse</div>
+        <div class="eq hl">\(\vec{v} = \dot{r}\vec{u}_r + r\dot{\theta}\vec{u}_\theta + \dot{z}\vec{u}_z\)</div>
+        <div class="annot">Le terme \(r\dot{\theta}\) est la <strong>vitesse tangentielle</strong> — il apparaît car \(\vec{u}_r\) tourne avec le point.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Vecteur accélération — Le grand classique</div>
+        <div class="eq hl">\(\vec{a} = \underbrace{(\ddot{r} - r\dot{\theta}^2)}_{\text{composante radiale}}\vec{u}_r + \underbrace{(r\ddot{\theta} + 2\dot{r}\dot{\theta})}_{\text{composante transverse}}\vec{u}_\theta + \ddot{z}\vec{u}_z\)</div>
+        <div class="def-grid" style="margin-top:.4rem">
+          <span class="def-term">\(-r\dot{\theta}^2\)</span><span class="def-desc">Terme <em>centripète</em> : accélération orientée vers le centre, due à la rotation. Toujours présent sur une trajectoire courbe.</span>
+          <span class="def-term">\(2\dot{r}\dot{\theta}\)</span><span class="def-desc">Terme de <em>Coriolis</em> en coordonnées cylindriques. Apparaît dès que le rayon varie ET que le point tourne.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Pendule Simple — Tombé en 2023</div>
+      <div class="annot-plain">Longueur \(L\) constante : \(\dot{r} = 0\) et \(\ddot{r} = 0\). L'accélération se simplifie mais conserve son terme centripète :</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Accélération du pendule</div>
+        <div class="eq">\(\vec{a} = -L\dot{\theta}^2\vec{u}_r + L\ddot{\theta}\vec{u}_\theta\)</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Équation du mouvement — PFD projeté sur \(\vec{u}_\theta\)</div>
+        <div class="eq hl">\(\ddot{\theta} + \frac{g}{L}\sin\theta = 0\)</div>
+        <div class="annot">C'est l'équation exacte (non linéaire). Pour les petites oscillations (\(\sin\theta \approx \theta\)), on obtient un mouvement harmonique de pulsation \(\omega_0 = \sqrt{g/L}\).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 02 ════════════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Référentiels Non-Galiléens</h2><span class="icon">🌍</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p><strong>Tombé en 2025.</strong> Dans un repère en rotation (ex : la Terre, un manège, un carrousel), les lois de Newton ne s'appliquent pas directement car le repère est <em>accéléré</em>. Des <strong>forces d'inertie "fantômes"</strong> apparaissent pour l'observateur solidaire du repère tournant. Ces forces n'ont pas de cause physique réelle — elles compensent l'accélération du référentiel lui-même.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Composition des accélérations</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Relation fondamentale</div>
+        <div class="eq hl">\(\vec{a}_{\text{absolue}} = \vec{a}_{\text{relative}} + \vec{a}_{\text{entraînement}} + \vec{a}_{\text{Coriolis}}\)</div>
+        <div class="def-grid" style="margin-top:.4rem">
+          <span class="def-term">\(\vec{a}_{\text{absolue}}\)</span><span class="def-desc">Accélération vue depuis un référentiel <em>Galiléen fixe</em> (les étoiles, par exemple).</span>
+          <span class="def-term">\(\vec{a}_{\text{relative}}\)</span><span class="def-desc">Accélération vue par l'observateur <em>dans le repère tournant</em>.</span>
+          <span class="def-term">\(\vec{a}_{\text{entraînement}}\)</span><span class="def-desc">Accélération due au mouvement du repère lui-même (rotation, translation). Inclut le terme centripète.</span>
+          <span class="def-term">\(\vec{a}_{\text{Coriolis}}\)</span><span class="def-desc">Accélération de couplage entre la rotation du repère et le mouvement relatif de l'objet.</span>
+        </div>
+      </div>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Force de Coriolis</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Expression</div>
+        <div class="eq hl">\(\vec{F}_C = -2m\,\vec{\Omega} \wedge \vec{v}_{\text{relative}}\)</div>
+        <div class="annot">\(\vec{\Omega}\) = vecteur rotation du repère non-Galiléen. \(\vec{v}_{\text{relative}}\) = vitesse de l'objet <em>vue depuis le repère tournant</em>. La force est perpendiculaire à \(\vec{v}_{\text{relative}}\).</div>
+        <div class="annot" style="margin-top:.3rem">C'est la force de Coriolis qui <strong>dévie les vents</strong> à la surface de la Terre et crée les <strong>cyclones</strong> (rotation anti-horaire dans l'hémisphère Nord).</div>
+      </div>
+    </div>
+    <div class="trap">
+      <div class="trap-title">⚠ Piège Vrai / Faux — très testé</div>
+      <p><strong>"Un référentiel en rotation uniforme est Galiléen."</strong> → <strong>FAUX.</strong></p>
+      <p>Un référentiel en rotation uniforme par rapport à un référentiel Galiléen n'est <strong>PAS</strong> Galiléen : il possède une accélération centripète \(-r\Omega^2 \vec{u}_r\) non nulle. Seule la <em>translation rectiligne uniforme</em> préserve le caractère Galiléen.</p>
+      <p><strong>"La force de Coriolis est trop faible pour être observée."</strong> → <strong>FAUX.</strong> Elle est directement responsable des cyclones, des vents dominants et de la déviation des missiles balistiques.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 03 ════════════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Mécanique Spatiale &amp; Orbites</h2><span class="new-badge">Hack intégré</span><span class="icon">🛰️</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Modéliser l'orbite d'un <strong>satellite</strong> autour d'un astre de masse \(M\), ou l'interaction entre deux corps. L'orbite circulaire est le cas de base du concours : la force gravitationnelle sert d'accélération centripète.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Orbites circulaires de rayon r</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Vitesse orbitale</div>
+        <div class="eq hl">\(v = \sqrt{\dfrac{GM}{r}}\)</div>
+        <div class="annot">S'obtient en égalisant accélération centripète \((v^2/r)\) et champ de gravité \((GM/r^2)\). Plus l'orbite est haute, plus le satellite va <em>lentement</em>.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">3ème Loi de Kepler</div>
+        <div class="eq hl">\(\dfrac{T^2}{r^3} = \dfrac{4\pi^2}{GM}\)</div>
+        <div class="annot">Le carré de la période est proportionnel au cube du rayon orbital. Ce rapport est <em>constant</em> pour tous les satellites du même astre.</div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Astuce d'énergie (élimine 3 réponses sur 5 sans calcul)</div>
+      <p>Sur une <strong>orbite circulaire</strong>, les trois énergies sont rigoureusement liées. L'énergie mécanique est <em>strictement négative</em> (état lié : le satellite ne peut pas s'échapper) :</p>
+      <p style="text-align:center;margin:.6rem 0">\[\boxed{E_m = \frac{1}{2}E_p = -E_c}\]</p>
+      <p><strong>Conséquences directes pour les QCM :</strong></p>
+      <ul style="padding-left:1.2rem;color:#f0d898">
+        <li>Si une formule d'énergie proposée donne \(E_m > 0\) → éliminée immédiatement.</li>
+        <li>\(E_c > 0\) toujours (énergie cinétique) → \(E_m = -E_c < 0\) → l'énergie mécanique est <em>négative</em>.</li>
+        <li>Si le satellite monte (rayon augmente) → \(E_p\) augmente, \(E_c\) diminue (il ralentit), \(E_m\) augmente (devient moins négative).</li>
+      </ul>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Problème à 2 corps</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Masse réduite</div>
+        <div class="eq hl">\(\mu = \dfrac{m_1\, m_2}{m_1 + m_2}\)</div>
+        <div class="annot">Permet de ramener le problème à deux corps à un problème à un seul corps de masse \(\mu\) en mouvement dans le champ de l'autre. Dans le <strong>référentiel barycentrique</strong>, la quantité de mouvement totale est toujours <em>nulle</em>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 04 ════════════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Électrostatique — Théorème de Gauss</h2><span class="icon">⚡</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Le théorème de Gauss est le <strong>roi des QCM</strong> en électrostatique. Il permet de calculer le champ électrique \(\vec{E}\) créé par une distribution de charges <em>très symétrique</em> (sphère, cylindre infini, plan infini) sans intégrer directement la loi de Coulomb. Il suffit de choisir astucieusement une surface fermée (surface de Gauss) qui exploite les symétries.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Équation fondamentale</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Théorème de Gauss</div>
+        <div class="eq hl">\[ \displaystyle \oiint \vec{E} \cdot d\vec{S} = \dfrac{Q_{\text{intérieure}}}{\varepsilon_0}\]</div>
+        <div class="annot">Le flux du champ électrique à travers une <em>surface fermée</em> quelconque est égal à la charge totale <em>enfermée à l'intérieur</em>, divisée par \(\varepsilon_0\). Les charges <strong>extérieures</strong> ne contribuent pas.</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Sphère pleine — densité volumique ρ, rayon R (tombé en 2023 &amp; 2025)</div>
+      <div class="grid2">
+        <div class="eq-row">
+          <div class="eq-name-tag">Extérieur (r ≥ R)</div>
+          <div class="eq hl">\(E(r) = \dfrac{Q_{\text{totale}}}{4\pi\varepsilon_0 r^2}\)</div>
+          <div class="annot">La sphère pleine agit comme une <strong>charge ponctuelle centrale</strong> vue de l'extérieur.</div>
+        </div>
+        <div class="eq-row">
+          <div class="eq-name-tag">Intérieur (r &lt; R)</div>
+          <div class="eq hl">\(E(r) = \dfrac{\rho\, r}{3\varepsilon_0}\)</div>
+          <div class="annot"><strong>Croissance linéaire</strong> : seule la charge enfermée dans la sphère de rayon \(r\) compte.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Sphère creuse — densité surfacique σ, rayon R</div>
+      <div class="grid2">
+        <div class="eq-row">
+          <div class="eq-name-tag">Extérieur (r ≥ R)</div>
+          <div class="eq hl">\(E(r) = \dfrac{\sigma R^2}{\varepsilon_0 r^2}\)</div>
+          <div class="annot">Même comportement que la sphère pleine vue de l'extérieur.</div>
+        </div>
+        <div class="eq-row">
+          <div class="eq-name-tag">Intérieur (r &lt; R)</div>
+          <div class="eq hl">\(E(r) = 0\)</div>
+          <div class="annot"><strong>Aucune charge enfermée</strong> → flux nul → champ nul. La cage de Faraday est une application directe de ce résultat.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 05 ════════════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Magnétostatique — Théorème d'Ampère</h2><span class="new-badge">Hack intégré</span><span class="icon">🧲</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Le théorème d'Ampère est le <strong>jumeau magnétique</strong> du théorème de Gauss. Là où Gauss calcule \(\vec{E}\) via un flux à travers une <em>surface</em> fermée, Ampère calcule \(\vec{B}\) via une <em>circulation</em> sur un <em>contour</em> fermé. Il s'applique aux distributions de courants très symétriques : fil infini, solénoïde, bobine toroïdale.</p>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Équation fondamentale</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Théorème d'Ampère</div>
+        <div class="eq hl">\(\oint \vec{B} \cdot d\vec{l} = \mu_0\, I_{\text{enlacé}}\)</div>
+        <div class="annot">La circulation du champ magnétique sur un contour fermé (courbe d'Ampère) est égale à \(\mu_0\) multiplié par la <strong>somme algébrique des courants</strong> qui traversent la surface délimitée par ce contour. Les courants <em>extérieurs</em> ne contribuent pas.</div>
+      </div>
+    </div>
+    <div class="eq-block">
+      <div class="block-title">Applications directes — à connaître</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Fil infini parcouru par I</div>
+        <div class="eq hl">\(B(r) = \dfrac{\mu_0 I}{2\pi r}\)</div>
+        <div class="annot">Champ en \(1/r\). Contour d'Ampère = cercle de rayon \(r\) coaxial au fil.</div>
+      </div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Solénoïde infini (n spires/m)</div>
+        <div class="eq hl">\(B = \mu_0 n I\)</div>
+        <div class="annot">Champ <em>uniforme</em> à l'intérieur, <em>nul</em> à l'extérieur. C'est la base de tout électroaimant.</div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="def-grid">
+        <span class="def-term">\(\mu_0\)</span>
+        <span class="def-desc">Perméabilité magnétique du vide : \(\mu_0 = 4\pi \times 10^{-7}\;\text{T·m·A}^{-1}\)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 06 ════════════════ -->
+<div class="section s6">
+  <div class="section-header"><span class="num">06</span><h2 style="color:var(--c6)">Électromagnétisme — Maxwell, OPPH &amp; Poynting</h2><span class="new-badge">Hack intégré</span><span class="icon">📡</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>Les <strong>équations de Maxwell</strong> unifient l'électricité, le magnétisme et l'optique en un seul formalisme. Elles prédisent l'existence des ondes électromagnétiques (lumière, radio, WiFi…). Dans le vide, elles se propagent à la vitesse \(c = 3 \times 10^8\;\text{m/s}\).</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Les 4 Équations Locales de Maxwell</div>
+      <div class="maxwell-list">
+        <div class="maxwell-item">
+          <div class="maxwell-num">1</div>
+          <div class="maxwell-eq">
+            <div class="maxwell-label">Maxwell-Gauss</div>
+            <div class="eq hl">\(\text{div}\,\vec{E} = \dfrac{\rho}{\varepsilon_0}\)</div>
+            <div class="annot">Les charges électriques sont les <em>sources</em> du champ \(\vec{E}\). Forme locale du théorème de Gauss.</div>
+          </div>
+        </div>
+        <div class="maxwell-item">
+          <div class="maxwell-num">2</div>
+          <div class="maxwell-eq">
+            <div class="maxwell-label">Maxwell-Thomson (Flux conservatif)</div>
+            <div class="eq hl">\(\text{div}\,\vec{B} = 0\)</div>
+            <div class="annot"><strong>Il n'existe pas de monopôle magnétique</strong> (pas de "charge magnétique" isolée). Les lignes de champ \(\vec{B}\) se referment toujours sur elles-mêmes.</div>
+          </div>
+        </div>
+        <div class="maxwell-item">
+          <div class="maxwell-num">3</div>
+          <div class="maxwell-eq">
+            <div class="maxwell-label">Maxwell-Faraday (Induction)</div>
+            <div class="eq hl">\(\text{rot}\,\vec{E} = -\dfrac{\partial \vec{B}}{\partial t}\)</div>
+            <div class="annot">Un champ magnétique <em>variable dans le temps</em> crée un champ électrique. C'est le principe des alternateurs et des transformateurs.</div>
+          </div>
+        </div>
+        <div class="maxwell-item">
+          <div class="maxwell-num">4</div>
+          <div class="maxwell-eq">
+            <div class="maxwell-label">Maxwell-Ampère (Courant + Déplacement)</div>
+            <div class="eq hl">\(\text{rot}\,\vec{B} = \mu_0 \vec{j} + \mu_0\varepsilon_0 \dfrac{\partial \vec{E}}{\partial t}\)</div>
+            <div class="annot">Un courant \(\vec{j}\) <em>ou</em> un champ électrique variable dans le temps crée un champ magnétique. Le terme \(\mu_0\varepsilon_0 \partial\vec{E}/\partial t\) est le "courant de déplacement" de Maxwell — il permet la propagation des ondes EM dans le vide (sans fil).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Onde Plane Progressive Harmonique (OPPH)</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Relation de structure</div>
+        <div class="eq hl">\(\vec{B} = \dfrac{\vec{k} \wedge \vec{E}}{\omega}\)</div>
+        <div class="annot">\(\vec{E}\), \(\vec{B}\) et le vecteur d'onde \(\vec{k}\) (direction de propagation) forment un <strong>trièdre direct orthogonal</strong>. Avec la relation de dispersion dans le vide : \(k = \omega / c\).</div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Vecteur de Poynting</div>
+      <div class="eq" style="background:rgba(0,0,0,.4);border:1px solid rgba(56,189,248,.25);margin-bottom:.6rem">\[\vec{\Pi} = \dfrac{\vec{E} \wedge \vec{B}}{\mu_0}\]</div>
+      <p>Le vecteur de Poynting \(\vec{\Pi}\) indique la <strong>direction de propagation de l'énergie</strong> électromagnétique. Sa norme donne la <strong>puissance surfacique transportée</strong> (en W/m²). C'est lui qui "porte" l'énergie d'une antenne WiFi jusqu'à votre téléphone.</p>
+      <p><strong>À retenir pour les QCM :</strong> \(\vec{\Pi}\) est toujours perpendiculaire à la fois à \(\vec{E}\) et à \(\vec{B}\), et dans la même direction que \(\vec{k}\).</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════ 07 ════════════════ -->
+<div class="section s7">
+  <div class="section-header"><span class="num">07</span><h2 style="color:var(--c7)">Électrocinétique — Impédances &amp; Filtres</h2><span class="icon">🔌</span></div>
+  <div class="section-body">
+    <div class="ctx">
+      <p>En régime sinusoïdal forcé, on remplace les grandeurs temporelles par leurs <strong>représentations complexes</strong> (amplitudes complexes). Chaque composant a une impédance complexe \(\underline{Z}\) qui se comporte comme une résistance généralisée. Le "hack des asymptotes" permet d'identifier la nature d'un filtre <em>sans calcul</em>.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Impédances des composants</div>
+      <div class="def-grid">
+        <span class="def-term">Résistance R</span><span class="def-desc">\(\underline{Z}_R = R\) — indépendante de la fréquence.</span>
+        <span class="def-term">Bobine L</span><span class="def-desc">\(\underline{Z}_L = jL\omega\) — l'impédance <em>augmente</em> avec la fréquence.</span>
+        <span class="def-term">Condensateur C</span><span class="def-desc">\(\underline{Z}_C = \dfrac{1}{jC\omega}\) — l'impédance <em>diminue</em> avec la fréquence.</span>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack des asymptotes — Identifier un filtre sans calcul (tombé en 2023)</div>
+      <p>Pour deviner la nature d'un filtre (passe-bas, passe-haut), remplace chaque composant par son comportement aux fréquences extrêmes :</p>
+      <table class="cmp-table" style="margin-top:.6rem">
+        <tr><th>Composant</th><th>\(\omega \to 0\) (Basse fréquence)</th><th>\(\omega \to \infty\) (Haute fréquence)</th></tr>
+        <tr>
+          <td>Bobine L</td>
+          <td>\(\underline{Z}_L \to 0\) → <strong>Fil</strong> (court-circuit)</td>
+          <td>\(\underline{Z}_L \to \infty\) → <strong>Interrupteur ouvert</strong></td>
+        </tr>
+        <tr>
+          <td>Condensateur C</td>
+          <td>\(\underline{Z}_C \to \infty\) → <strong>Interrupteur ouvert</strong></td>
+          <td>\(\underline{Z}_C \to 0\) → <strong>Fil</strong> (court-circuit)</td>
+        </tr>
+      </table>
+      <p style="margin-top:.6rem"><strong>Méthode :</strong> Dessine le circuit aux deux extrêmes. Si le signal passe à basse fréquence mais pas à haute → passe-bas. L'inverse → passe-haut.</p>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Récapitulatif — Ce que le concours adore tester</div>
+      <ul>
+        <li>Un condensateur <strong>bloque le courant continu</strong> (\(\omega = 0\) → ouvert) mais le laisse passer en haute fréquence.</li>
+        <li>Une bobine <strong>laisse passer le courant continu</strong> (\(\omega = 0\) → fil) mais bloque les hautes fréquences.</li>
+        <li>Un filtre RC passe-bas a sa fréquence de coupure à \(f_c = \frac{1}{2\pi RC}\).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+</body>
+</html>
