@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 5b MATHS — Équations Différentielles & Polynômes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --surface: #171b27;
+    --border:  #252c3e;
+    --c1: #34d399;   /* vert      — ED Ordre 1 */
+    --c2: #f59e0b;   /* ambre     — ED Ordre 2 */
+    --c3: #818cf8;   /* indigo    — Racines & Multiplicité */
+    --c4: #38bdf8;   /* cyan      — Viète */
+    --c5: #f472b6;   /* rose      — PGCD & Arithmétique */
+    --text:  #e8ecf4;
+    --muted: #7b859e;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Source Serif 4',serif; font-size:15.5px; line-height:1.8; }
+
+  header {
+    background: linear-gradient(135deg,#0a120c 0%,#131a20 55%,#0d0b18 100%);
+    border-bottom:1px solid var(--border);
+    padding:3.5rem 2rem 2.5rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(52,211,153,.1) 0%,rgba(129,140,248,.07) 55%,transparent 75%);
+  }
+  .bloc-tag {
+    display:inline-block; font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--c1); border:1px solid rgba(52,211,153,.3);
+    padding:.25rem .8rem; border-radius:2px; margin-bottom:.6rem;
+  }
+  .version-badge {
+    display:inline-block; font-family:var(--mono); font-size:.65rem; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--c2); border:1px solid rgba(245,158,11,.35);
+    padding:.2rem .65rem; border-radius:2px; margin-left:.6rem; vertical-align:middle;
+  }
+  header h1 {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:900;
+    background:linear-gradient(90deg,#a7f3d0 0%,#fde68a 35%,#c7d2fe 65%,#fbcfe8 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:relative;
+  }
+  .toc { display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem; margin-top:1.8rem; position:relative; }
+  .toc-chip { font-family:var(--mono); font-size:.68rem; padding:.28rem .85rem; border-radius:20px; border:1px solid; cursor:default; transition:transform .15s; }
+  .toc-chip:hover { transform:translateY(-2px); }
+
+  main { max-width:960px; margin:0 auto; padding:2.5rem 1.5rem 5rem; display:flex; flex-direction:column; gap:2.8rem; }
+
+  /* ── PARTIE DIVIDER ── */
+  .partie-divider {
+    display:flex; align-items:center; gap:1rem;
+    border-radius:10px; padding:1rem 1.4rem;
+    background:linear-gradient(90deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.02) 100%);
+    border:1px solid var(--border);
+  }
+  .partie-label { font-family:var(--mono); font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; }
+  .partie-title { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; flex:1; }
+
+  .section { border-radius:12px; border:1px solid var(--border); background:var(--surface); overflow:hidden; animation:fadeUp .4s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .section:nth-child(1){animation-delay:.00s}.section:nth-child(2){animation-delay:.05s}
+  .section:nth-child(3){animation-delay:.10s}.section:nth-child(4){animation-delay:.15s}
+  .section:nth-child(5){animation-delay:.20s}
+
+  .section-header { display:flex; align-items:center; gap:1rem; padding:1.2rem 1.6rem; border-bottom:1px solid var(--border); }
+  .section-header .num { font-family:var(--mono); font-size:.75rem; font-weight:600; color:var(--muted); letter-spacing:.06em; min-width:2rem; }
+  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:700; flex:1; }
+  .section-header .icon { font-size:1.4rem; line-height:1; }
+
+  .section-body { padding:1.6rem; display:flex; flex-direction:column; gap:1.4rem; }
+
+  .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
+  .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)}
+
+  .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
+  .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
+  .ctx p { margin-bottom:.5rem; } .ctx p:last-child { margin-bottom:0; } .ctx strong { color:var(--text); }
+
+  .eq-block { border-radius:8px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:.75rem; }
+  .s1 .eq-block{background:rgba(52,211,153,.07);  border-left:3px solid var(--c1)}
+  .s2 .eq-block{background:rgba(245,158,11,.07);  border-left:3px solid var(--c2)}
+  .s3 .eq-block{background:rgba(129,140,248,.07); border-left:3px solid var(--c3)}
+  .s4 .eq-block{background:rgba(56,189,248,.07);  border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(244,114,182,.07); border-left:3px solid var(--c5)}
+
+  .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
+  .eq-row { display:flex; flex-direction:column; gap:.4rem; }
+  .eq-row + .eq-row { padding-top:.75rem; border-top:1px solid rgba(255,255,255,.06); }
+  .eq-name-tag { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .eq { background:rgba(0,0,0,.35); border-radius:6px; padding:.65rem 1rem; overflow-x:auto; }
+  .eq.hl { background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.1); }
+
+  .annot { font-size:.88rem; color:#b4bdd0; padding-left:.9rem; border-left:2px solid var(--border); font-style:italic; }
+  .annot strong { color:var(--text); font-weight:600; font-style:normal; }
+  .annot-plain { font-size:.9rem; color:#c8d0e0; }
+
+  .sub-eq { margin-left:1.2rem; border-left:2px dashed rgba(255,255,255,.1); padding-left:1rem; display:flex; flex-direction:column; gap:.5rem; }
+
+  .trap { background:rgba(255,80,80,.07); border:1px solid rgba(255,80,80,.28); border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; color:#f0c0c0; }
+  .trap .trap-title { color:#ff7070; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .trap p { margin-bottom:.4rem; } .trap p:last-child { margin-bottom:0; } .trap strong { color:#ff9090; }
+
+  .hack-box { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(251,191,36,.06); border:1px solid rgba(251,191,36,.3); color:#f5e0a0; }
+  .hack-box .hack-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.5rem; }
+  .hack-box p { margin-bottom:.4rem; color:#f0d898; } .hack-box p:last-child { margin-bottom:0; }
+  .hack-box strong { color:#fcd75a; }
+  .hack-box ol,.hack-box ul { padding-left:1.3rem; color:#f0d898; } .hack-box li { margin-bottom:.3rem; }
+
+  .concours { border-radius:8px; padding:1rem 1.2rem; font-size:.9rem; background:rgba(255,220,80,.06); border:1px solid rgba(255,220,80,.22); color:#f5e0a0; }
+  .concours .concours-title { color:#fbbf24; font-family:var(--mono); font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:.55rem; }
+  .concours p { margin-bottom:.4rem; color:#f0d898; } .concours p:last-child { margin-bottom:0; }
+  .concours strong { color:#fcd75a; }
+  .concours ul { padding-left:1.2rem; color:#f0d898; } .concours ul li { margin-bottom:.3rem; }
+
+  .note { background:rgba(255,255,255,.04); border-radius:8px; border:1px solid var(--border); padding:.9rem 1.2rem; font-size:.9rem; color:#b4bdd0; }
+  .note strong { color:var(--text); }
+
+  .def-grid { display:grid; grid-template-columns:auto 1fr; gap:.55rem 1rem; font-size:.9rem; align-items:start; }
+  .def-term { font-family:var(--mono); font-weight:600; white-space:nowrap; padding:.18rem .55rem; border-radius:4px; font-size:.8rem; align-self:start; margin-top:.1rem; }
+  .def-desc { color:#b4bdd0; } .def-desc em { color:var(--text); font-style:normal; font-weight:600; } .def-desc strong { color:var(--text); }
+  .s1 .def-term{background:rgba(52,211,153,.15);  color:var(--c1)}
+  .s2 .def-term{background:rgba(245,158,11,.15);  color:var(--c2)}
+  .s3 .def-term{background:rgba(129,140,248,.15); color:var(--c3)}
+  .s4 .def-term{background:rgba(56,189,248,.15);  color:var(--c4)}
+  .s5 .def-term{background:rgba(244,114,182,.15); color:var(--c5)}
+
+  /* ── Les 3 cas ED ordre 2 ── */
+  .cas-grid { display:flex; flex-direction:column; gap:.6rem; }
+  .cas-card { border-radius:8px; padding:.9rem 1.1rem; display:grid; grid-template-columns:auto 1fr; gap:.8rem; align-items:start; border:1px solid var(--border); }
+  .cas-aperi { background:rgba(248,113,113,.07); border-color:rgba(248,113,113,.25); }
+  .cas-criti { background:rgba(251,191,36,.06);  border-color:rgba(251,191,36,.25); }
+  .cas-oscil { background:rgba(52,211,153,.07);  border-color:rgba(52,211,153,.22); }
+  .cas-badge { font-family:var(--mono); font-size:.72rem; font-weight:700; padding:.25rem .55rem; border-radius:4px; white-space:nowrap; text-align:center; align-self:start; margin-top:.1rem; }
+  .cas-aperi .cas-badge { background:rgba(248,113,113,.18); color:#fca5a5; }
+  .cas-criti .cas-badge { background:rgba(251,191,36,.18);  color:#fde68a; }
+  .cas-oscil .cas-badge { background:rgba(52,211,153,.18);  color:#6ee7b7; }
+  .cas-body { display:flex; flex-direction:column; gap:.35rem; }
+  .cas-cond { font-size:.88rem; font-weight:600; }
+  .cas-aperi .cas-cond { color:#fca5a5; }
+  .cas-criti .cas-cond { color:#fde68a; }
+  .cas-oscil .cas-cond { color:#6ee7b7; }
+  .cas-sol { font-size:.88rem; color:#c8d0e0; }
+  .cas-note { font-size:.82rem; color:var(--muted); font-style:italic; }
+
+  /* ── Multiplicité ── */
+  .mult-steps { display:flex; flex-direction:column; gap:.5rem; }
+  .mult-row { display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:center; padding:.6rem .9rem; border-radius:7px; border:1px solid var(--border); background:rgba(0,0,0,.2); }
+  .mult-badge { font-family:var(--mono); font-size:.75rem; font-weight:700; padding:.2rem .55rem; border-radius:4px; white-space:nowrap; }
+  .mult-s { background:rgba(129,140,248,.15); color:#a5b4fc; }
+  .mult-d { background:rgba(129,140,248,.25); color:#818cf8; }
+  .mult-k { background:rgba(129,140,248,.35); color:#6366f1; }
+  .mult-body { font-size:.88rem; color:#c8d0e0; font-family:var(--mono); }
+
+  /* ── Viète ── */
+  .viet-grid { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+  .viet-card { background:rgba(0,0,0,.3); border-radius:8px; padding:.9rem 1rem; border:1px solid var(--border); display:flex; flex-direction:column; gap:.4rem; }
+  .viet-label { font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .viet-formula { font-size:.95rem; color:var(--text); }
+  .viet-note { font-size:.8rem; color:var(--muted); font-style:italic; }
+
+  /* ── Euclide steps ── */
+  .euclide-steps { display:flex; flex-direction:column; gap:.5rem; }
+  .euc-row { display:grid; grid-template-columns:1.5rem 1fr; gap:.6rem; align-items:start; }
+  .euc-num { font-family:var(--mono); font-size:.72rem; font-weight:700; color:var(--c5); background:rgba(244,114,182,.15); border-radius:50%; width:1.5rem; height:1.5rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:.1rem; }
+  .euc-body { font-size:.9rem; color:#c8d0e0; }
+
+  .sep { height:1px; background:rgba(255,255,255,.07); margin:.2rem 0; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px) { .grid2{grid-template-columns:1fr} .viet-grid{grid-template-columns:1fr} .cas-grid .cas-card{grid-template-columns:1fr} }
+  @media (max-width:600px) { .section-body{padding:1.1rem} .def-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bloc-tag">Bloc 6 Maths · Auto-suffisant</div>
+  <h1>Équations Différentielles &amp; Polynômes</h1>
+  <div class="toc">
+    <span class="toc-chip" style="color:var(--c1);border-color:rgba(52,211,153,.3)">01 · ED Ordre 1</span>
+    <span class="toc-chip" style="color:var(--c2);border-color:rgba(245,158,11,.3)">02 · ED Ordre 2</span>
+    <span class="toc-chip" style="color:var(--c3);border-color:rgba(129,140,248,.3)">03 · Racines &amp; Multiplicité</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(56,189,248,.3)">04 · Formules de Viète</span>
+    <span class="toc-chip" style="color:var(--c5);border-color:rgba(244,114,182,.3)">05 · PGCD &amp; Arithmétique</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══ PARTIE A ═══ -->
+<div class="partie-divider">
+  <span class="partie-label" style="color:var(--c1)">Partie A</span>
+  <span class="partie-title" style="color:var(--c1)">Équations Différentielles — Les réflexes de l'ingénieur</span>
+</div>
+
+<!-- ════════ 01 ════════ -->
+<div class="section s1">
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Équations Différentielles Linéaires d'Ordre 1</h2><span class="icon">∫</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le jury ne veut pas voir une page de calcul. Il te donne l'équation et 5 solutions. Ton but est de <strong>reconnaître la forme générale</strong> ou d'utiliser la <em>méthode inversée</em> : tester les solutions proposées directement.</p>
+      <p>La solution générale est toujours : \(y = y_h + y_p\) — solution homogène + une solution particulière évidente.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Forme générale &amp; solution homogène</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Forme générale</div>
+        <div class="eq hl">\(y' + a(x)\,y = b(x)\)</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Solution homogène — équation sans second membre (\(b = 0\))</div>
+        <div class="eq hl">\(y_h(x) = C \cdot \exp\!\left(-\int a(x)\,dx\right)\)</div>
+        <div class="annot">⚠ Attention au signe <strong>"-"</strong> dans l'exposant — piège classique. Cas le plus fréquent (\(a\) = constante) : \(y_h(x) = C \cdot e^{-ax}\).</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Solution particulière \(y_p\)</div>
+        <div class="annot-plain">On cherche une solution particulière \(y_p\) qui vérifie l'équation complète avec le second membre \(b(x)\). En QCM, <em>ne pas chercher</em> avec la méthode de variation de la constante — utiliser directement le hack ci-dessous.</div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack Sniper — Méthode QCM infaillible</div>
+      <p>Prends les 5 formules proposées (A, B, C, D, E), <strong>dérive-les mentalement</strong> et regarde laquelle vérifie \(y' + ay = b(x)\). C'est mathématiquement infaillible et <strong>3× plus rapide</strong> que de construire \(y_p\) de zéro.</p>
+      <p>En pratique : pour \(y' + 2y = 4\), la solution particulière est \(y_p = 2\) (constante). Vérifie : \(0 + 2 \times 2 = 4\) ✓. Si une réponse ne vérifie pas l'équation, elle est éliminée.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ 02 ════════ -->
+<div class="section s2">
+  <div class="section-header"><span class="num">02</span><h2 style="color:var(--c2)">Équations Différentielles d'Ordre 2 — Coefficients Constants</h2><span class="icon">〰️</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Les 3 cas de l'équation caractéristique sont <strong>cruciaux en Maths ET en Physique</strong> (circuits RLC, oscillateurs mécaniques). La même structure apparaît partout.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Méthode — Équation caractéristique</div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Forme générale homogène</div>
+        <div class="eq hl">\(ay'' + by' + cy = 0\)</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Étape 1 — Poser l'équation caractéristique</div>
+        <div class="eq hl">\(ar^2 + br + c = 0 \qquad \Delta = b^2 - 4ac\)</div>
+        <div class="annot">On substitue \(y = e^{rx}\) dans l'équation. Les solutions de cet polynôme donnent les exposants des solutions.</div>
+      </div>
+
+      <div class="eq-row">
+        <div class="eq-name-tag">Étape 2 — Analyser Δ et écrire la solution</div>
+      </div>
+    </div>
+
+    <div class="cas-grid">
+
+      <div class="cas-card cas-aperi">
+        <span class="cas-badge">Δ &gt; 0</span>
+        <div class="cas-body">
+          <div class="cas-cond">Régime apériodique</div>
+          <div class="cas-sol">Deux racines réelles distinctes : \(r_1\) et \(r_2\)</div>
+          <div class="eq" style="background:rgba(0,0,0,.4);margin-top:.3rem">\(y(x) = A\,e^{r_1 x} + B\,e^{r_2 x}\)</div>
+        </div>
+      </div>
+
+      <div class="cas-card cas-criti">
+        <span class="cas-badge">Δ = 0</span>
+        <div class="cas-body">
+          <div class="cas-cond">Régime critique</div>
+          <div class="cas-sol">Une racine double : \(r_0 = -\dfrac{b}{2a}\)</div>
+          <div class="eq" style="background:rgba(0,0,0,.4);margin-top:.3rem">\(y(x) = (Ax + B)\,e^{r_0 x}\)</div>
+          <div class="cas-note">⚠ Piège : ne pas oublier le "\(x\)" devant le \(A\) !</div>
+        </div>
+      </div>
+
+      <div class="cas-card cas-oscil">
+        <span class="cas-badge">Δ &lt; 0</span>
+        <div class="cas-body">
+          <div class="cas-cond">Régime pseudo-périodique / Oscillations</div>
+          <div class="cas-sol">Deux racines complexes conjuguées : \(r = \alpha \pm i\beta\)<br>
+          avec \(\alpha = -\dfrac{b}{2a}\) et \(\beta = \dfrac{\sqrt{-\Delta}}{2a}\)</div>
+          <div class="eq" style="background:rgba(0,0,0,.4);margin-top:.3rem">\(y(x) = e^{\alpha x}\!\left[A\cos(\beta x) + B\sin(\beta x)\right]\)</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack Conditions Initiales — Éliminer sans calculer A et B</div>
+      <p>Si on te donne des conditions initiales (ex : \(y(0) = 0\) ou \(y'(0) = 1\)), <strong>injecte directement \(x = 0\)</strong> dans les propositions du QCM.</p>
+      <p>Exemple : \(y(0) = 0\) élimine immédiatement toute solution dont la valeur en 0 est non nulle — sans avoir à calculer A et B.</p>
+    </div>
+
+    <div class="note">
+      <strong>Lien avec la physique :</strong> Ces 3 cas correspondent exactement aux régimes des oscillateurs (circuit RLC, ressort-masse-amortisseur). Δ > 0 = sur-amorti, Δ = 0 = critique, Δ &lt; 0 = sous-amorti (oscillations).
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══ PARTIE B ═══ -->
+<div class="partie-divider">
+  <span class="partie-label" style="color:var(--c3)">Partie B</span>
+  <span class="partie-title" style="color:var(--c3)">Polynômes &amp; Arithmétique — L'art de la factorisation</span>
+</div>
+
+
+<!-- ════════ 03 ════════ -->
+<div class="section s3">
+  <div class="section-header"><span class="num">03</span><h2 style="color:var(--c3)">Racines &amp; Multiplicité</h2><span class="icon">🎯</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Si \(\alpha\) est racine d'un polynôme \(P\), alors \(P\) est factorisable par \((X - \alpha)\). La multiplicité d'une racine se lit sur ses dérivées successives.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Théorème de Multiplicité — Ultra-testé</div>
+      <div class="mult-steps">
+        <div class="mult-row">
+          <span class="mult-badge mult-s">Racine simple</span>
+          <div class="mult-body">\(P(\alpha) = 0\) &nbsp;ET&nbsp; \(P'(\alpha) \neq 0\) &nbsp;→&nbsp; Factorisable par \((X-\alpha)\)</div>
+        </div>
+        <div class="mult-row">
+          <span class="mult-badge mult-d">Racine double</span>
+          <div class="mult-body">\(P(\alpha) = 0\) &nbsp;ET&nbsp; \(P'(\alpha) = 0\) &nbsp;ET&nbsp; \(P''(\alpha) \neq 0\) &nbsp;→&nbsp; Factorisable par \((X-\alpha)^2\)</div>
+        </div>
+        <div class="mult-row">
+          <span class="mult-badge mult-k">Racine d'ordre k</span>
+          <div class="mult-body">\(P(\alpha) = P'(\alpha) = \cdots = P^{(k-1)}(\alpha) = 0\) &nbsp;ET&nbsp; \(P^{(k)}(\alpha) \neq 0\) &nbsp;→&nbsp; Factorisable par \((X-\alpha)^k\)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hack-box">
+      <div class="hack-title">⚡ Hack — Trouver les racines d'un polynôme de degré 3 ou 4</div>
+      <p>Face à un polynôme difficile à factoriser :</p>
+      <ol>
+        <li>Calcule \(P'(X)\) — c'est de degré inférieur, donc plus facile.</li>
+        <li>Trouve les racines de \(P'(X)\).</li>
+        <li>Si une racine \(\alpha\) de \(P'\) vérifie aussi \(P(\alpha) = 0\) → bingo, c'est une <strong>racine double de \(P\)</strong> !</li>
+      </ol>
+      <p style="margin-top:.3rem">Cette méthode évite de chercher les racines à l'aveugle par essais et erreurs.</p>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Exemple guidé</div>
+      <p>Soit \(P(X) = X^3 - 3X + 2\). On calcule \(P'(X) = 3X^2 - 3 = 3(X-1)(X+1)\). Racines de \(P'\) : \(X = 1\) et \(X = -1\).</p>
+      <p>On vérifie : \(P(1) = 1 - 3 + 2 = 0\) ✓. Donc \(X = 1\) est une <strong>racine double</strong> de \(P\). On peut écrire \(P(X) = (X-1)^2(X+2)\).</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ 04 ════════ -->
+<div class="section s4">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Formules de Viète — Relations Coefficients-Racines</h2><span class="icon">🔗</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Les formules de Viète permettent de <strong>lier les racines aux coefficients</strong> sans avoir à les calculer explicitement — économie de temps précieuse en QCM.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Cas général — Polynôme de degré n</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Polynôme</div>
+        <div class="eq">\(P(X) = a_n X^n + a_{n-1} X^{n-1} + \cdots + a_1 X + a_0\)</div>
+      </div>
+      <div class="viet-grid" style="margin-top:.4rem">
+        <div class="viet-card">
+          <div class="viet-label">Somme de toutes les racines</div>
+          <div class="viet-formula">\(\displaystyle\sum x_i = -\frac{a_{n-1}}{a_n}\)</div>
+          <div class="viet-note">Rapport du coeff de X^(n-1) sur celui de X^n, avec signe opposé.</div>
+        </div>
+        <div class="viet-card">
+          <div class="viet-label">Produit de toutes les racines</div>
+          <div class="viet-formula">\(\displaystyle\prod x_i = (-1)^n \frac{a_0}{a_n}\)</div>
+          <div class="viet-note">Rapport du terme constant sur le coeff dominant, avec signe \((-1)^n\).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Cas fondamental — Degré 2 : \(aX^2 + bX + c\)</div>
+      <div class="def-grid">
+        <span class="def-term">Somme</span><span class="def-desc">\(x_1 + x_2 = -\dfrac{b}{a}\)</span>
+        <span class="def-term">Produit</span><span class="def-desc">\(x_1 \cdot x_2 = \dfrac{c}{a}\)</span>
+      </div>
+      <div class="annot" style="margin-top:.4rem"><strong>Application directe :</strong> Trouver deux nombres dont on connaît la somme \(S\) et le produit \(P\) revient à résoudre \(X^2 - SX + P = 0\).</div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════ 05 ════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Arithmétique des Polynômes — PGCD &amp; Bézout</h2><span class="icon">⚗️</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Tout comme avec les entiers, on peut effectuer des <strong>divisions euclidiennes</strong> de polynômes : \(A = B \cdot Q + R\) avec \(\deg(R) < \deg(B)\). L'algorithme d'Euclide s'applique exactement de la même façon.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Division euclidienne de polynômes</div>
+      <div class="eq-row">
+        <div class="eq-name-tag">Formule</div>
+        <div class="eq hl">\(A = B \cdot Q + R \quad \text{avec } \deg(R) < \deg(B)\)</div>
+        <div class="annot">\(Q\) est le quotient et \(R\) le reste. Si \(R = 0\), alors \(B\) divise \(A\).</div>
+      </div>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Algorithme d'Euclide pour PGCD(A, B)</div>
+      <div class="euclide-steps">
+        <div class="euc-row">
+          <div class="euc-num">1</div>
+          <div class="euc-body">Divise le grand polynôme \(A\) par le petit \(B\). Obtiens un reste \(R_1\) (\(\deg(R_1) < \deg(B)\)).</div>
+        </div>
+        <div class="euc-row">
+          <div class="euc-num">2</div>
+          <div class="euc-body">Divise \(B\) par \(R_1\). Obtiens un reste \(R_2\).</div>
+        </div>
+        <div class="euc-row">
+          <div class="euc-num">3</div>
+          <div class="euc-body">Continue jusqu'à obtenir un <strong>reste nul</strong>.</div>
+        </div>
+        <div class="euc-row">
+          <div class="euc-num">★</div>
+          <div class="euc-body"><strong>Le PGCD = dernier reste non nul</strong>, rendu unitaire (divisé par son coefficient dominant pour qu'il commence par \(1 \cdot X^k\)).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concours">
+      <div class="concours-title">★ Théorème de Bézout pour les polynômes</div>
+      <p>Deux polynômes sont <strong>premiers entre eux</strong> si leur PGCD est égal à 1 (polynôme constant).</p>
+      <p>Dans ce cas, le théorème de Bézout s'applique : il existe des polynômes \(U\) et \(V\) tels que :</p>
+      <p style="text-align:center;margin:.4rem 0">\[A \cdot U + B \cdot V = 1\]</p>
+      <p>Application : si \(\text{PGCD}(A, B) = D\), on peut toujours écrire \(A \cdot U + B \cdot V = D\) pour certains polynômes \(U\) et \(V\).</p>
+    </div>
+
+  </div>
+</div>
+
+</main>
+</body>
+</html>

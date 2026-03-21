@@ -15,6 +15,7 @@
     --c2: #34d399;   /* vert      — Intégrales généralisées */
     --c3: #818cf8;   /* indigo    — Séries entières */
     --c4: #fb923c;   /* orange    — Convergence uniforme */
+    --c5: #60a5fa;   /* bleu ciel — Séries de fonctions */
     --text:  #e8ecf4;
     --muted: #7b859e;
     --mono: 'JetBrains Mono', monospace;
@@ -69,6 +70,7 @@
 
   .s1 .section-header{border-left:4px solid var(--c1)} .s2 .section-header{border-left:4px solid var(--c2)}
   .s3 .section-header{border-left:4px solid var(--c3)} .s4 .section-header{border-left:4px solid var(--c4)}
+  .s5 .section-header{border-left:4px solid var(--c5)}
 
   .ctx { background:rgba(255,255,255,.03); border-radius:8px; border:1px dashed rgba(255,255,255,.12); padding:1rem 1.2rem 1rem 1.5rem; font-size:.95rem; color:#c8d0e0; position:relative; }
   .ctx::before { content:'📐'; position:absolute; top:.85rem; left:-.6rem; font-size:1rem; background:var(--surface); padding:0 .15rem; }
@@ -79,6 +81,7 @@
   .s2 .eq-block{background:rgba(52,211,153,.07);  border-left:3px solid var(--c2)}
   .s3 .eq-block{background:rgba(129,140,248,.07); border-left:3px solid var(--c3)}
   .s4 .eq-block{background:rgba(251,146,60,.07);  border-left:3px solid var(--c4)}
+  .s5 .eq-block{background:rgba(96,165,250,.07);  border-left:3px solid var(--c5)}
 
   .eq-block .block-title { font-family:var(--mono); font-size:.7rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:.1rem; }
   .eq-row { display:flex; flex-direction:column; gap:.4rem; }
@@ -120,6 +123,7 @@
   .s2 .def-term{background:rgba(52,211,153,.15);  color:var(--c2)}
   .s3 .def-term{background:rgba(129,140,248,.15); color:var(--c3)}
   .s4 .def-term{background:rgba(251,146,60,.15);  color:var(--c4)}
+  .s5 .def-term{background:rgba(96,165,250,.15);  color:var(--c5)}
 
   /* Checklist arbre de décision */
   .checklist { display:flex; flex-direction:column; gap:.6rem; }
@@ -197,7 +201,8 @@
     <span class="toc-chip" style="color:var(--c1);border-color:rgba(248,113,113,.3)">01 · Séries Numériques</span>
     <span class="toc-chip" style="color:var(--c2);border-color:rgba(52,211,153,.3)">02 · Intégrales Généralisées</span>
     <span class="toc-chip" style="color:var(--c3);border-color:rgba(129,140,248,.3)">03 · Séries Entières</span>
-    <span class="toc-chip" style="color:var(--c4);border-color:rgba(251,146,60,.3)">04 · Convergence Uniforme</span>
+    <span class="toc-chip" style="color:var(--c4);border-color:rgba(251,146,60,.3)">04 · Modes de Convergence</span>
+    <span class="toc-chip" style="color:var(--c5);border-color:rgba(96,165,250,.35)">05 · Suites de Fonctions </span>
   </div>
 </header>
 
@@ -205,7 +210,7 @@
 
 <!-- ════════════════ 01 ════════════════ -->
 <div class="section s1">
-  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Séries Numériques — Le Boss des QCM</h2><span class="icon">∑</span></div>
+  <div class="section-header"><span class="num">01</span><h2 style="color:var(--c1)">Séries Numériques</h2><span class="icon">∑</span></div>
   <div class="section-body">
 
     <div class="ctx">
@@ -428,9 +433,62 @@
 </div>
 
 
+
+<!-- ════════════════ 05 ════════════════ -->
+<div class="section s5">
+  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c5)"> Modes de Convergence</h2><span class="icon">📈</span></div>
+  <div class="section-body">
+
+    <div class="ctx">
+      <p>Le GEI-UNIV adore tester ta compréhension fine des différents modes de convergence des séries de fonctions. Il ne faut pas juste connaître la hiérarchie, il faut savoir identifier chaque type et connaître son utilité.</p>
+    </div>
+
+    <div class="eq-block">
+      <div class="block-title">Les 3 modes de convergence (Rappels de cours)</div>
+      
+      <div class="eq-row">
+        <div class="def-grid">
+          <span class="def-term">Convergence Simple (CS)</span>
+          <span class="def-desc">
+            <strong style="color:var(--c3)">Formule :</strong> \(\forall x \in I, \quad \lim_{N \to +\infty} \sum_{n=0}^N f_n(x) = S(x)\)<br>
+            Pour <strong>chaque</strong> \(x\) fixé, la série numérique \(\sum f_n(x)\) converge. <br><em style="color:#f87171">Défaut :</em> Ne conserve ni la continuité, ni la dérivabilité de la limite.
+          </span>
+          
+          <span class="def-term">Convergence Uniforme (CU)</span>
+          <span class="def-desc">
+            <strong style="color:var(--c3)">Formule :</strong> \(\lim_{N \to +\infty} \left( \sup_{x \in I} \left| \sum_{k=N+1}^{+\infty} f_k(x) \right| \right) = 0\)<br>
+            La série converge "à la même vitesse" pour tout \(x\). Le reste de la série tend uniformément vers 0. <br><em style="color:#4ade80">Le super-pouvoir :</em> <strong>Transmet la continuité</strong> de \(f_n\) à la fonction limite. Autorise l'inversion limite/intégrale.
+          </span>
+          
+          <span class="def-term">Convergence Normale (CN)</span>
+          <span class="def-desc">
+            <strong style="color:var(--c3)">Formule :</strong> \(\sum \|f_n\|_{\infty} \text{ converge, avec } \|f_n\|_{\infty} = \sup_{x \in I} |f_n(x)|\)<br>
+            La série des maximums converge : on trouve des nombres \(a_n\) tels que \(|f_n(x)| \le a_n\) pour tout \(x\), et \(\sum a_n\) converge.<br><em style="color:#60a5fa">Pratique :</em> C'est le mode le plus fort et souvent le plus facile à prouver algébriquement.
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="hack-box">
+      <div class="hack-title">⚡ La Cascade de Convergence (Le Hack QCM)</div>
+      <p>Dans les QCM, le jury propose souvent 5 affirmations mélangeant les types. Apprends cette chaîne logique par cœur :</p>
+      <p style="text-align:center;font-weight:bold;font-size:1.1em;margin:15px 0;color:#fcd75a;">Convergence Normale ⟹ Convergence Uniforme ⟹ Convergence Simple</p>
+      <p style="font-size:0.9em;text-align:center;opacity:0.8;">(Note : La Convergence Normale implique également la Convergence Absolue).</p>
+    </div>
+
+    <div class="trap">
+      <div class="trap-title">⚠ LE PIÈGE CLASSIQUE DU CONCOURS (VRAI/FAUX)</div>
+      <p><strong>"La convergence uniforme implique la convergence normale." → FAUX !</strong></p>
+      <p>C'est le piège le plus glissé dans les QCM. Une série peut converger uniformément mais ne PAS converger normalement.</p>
+      <p><em>L'exemple à garder en tête :</em> La série alternée \(\sum \frac{(-1)^n}{n+x^2}\) converge uniformément sur \(\mathbb{R}\) (grâce au Critère Spécial des Séries Alternées), mais <strong>pas normalement</strong> car son maximum est \(\frac{1}{n}\), et on sait que la série harmonique \(\sum \frac{1}{n}\) diverge !</p>
+    </div>
+
+  </div>
+</div>
+
 <!-- ════════════════ 04 ════════════════ -->
 <div class="section s4">
-  <div class="section-header"><span class="num">04</span><h2 style="color:var(--c4)">Suites de Fonctions &amp; Convergence Uniforme</h2><span class="icon">〰️</span></div>
+  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c4)">Suites de Fonctions </h2><span class="icon">〰️</span></div>
   <div class="section-body">
 
     <div class="ctx">
@@ -492,6 +550,7 @@
 
   </div>
 </div>
+
 
 </main>
 </body>

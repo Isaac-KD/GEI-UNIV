@@ -21,6 +21,7 @@
     --m3: #818cf8;
     --m4: #fbbf24;
     --m5: #fb923c;
+    --m6: #2dd4bf;   /* teal — EquaDiff & Polynômes */
 
     /* Physique palette */
     --p0: #e2e8f0;
@@ -277,6 +278,10 @@
   .m5:hover { border-color: rgba(251,146,60,.4); }
   .m5 .card-title { color: var(--m5); }
 
+  .m6 .card-header { border-left: 4px solid var(--m6); }
+  .m6:hover { border-color: rgba(45,212,191,.4); }
+  .m6 .card-title { color: var(--m6); }
+
   .p0 .card-header { border-left: 4px solid var(--p0); }
   .p0:hover { border-color: rgba(226,232,240,.35); }
   .p0 .card-title { color: var(--p0); }
@@ -324,6 +329,7 @@
   .cards-grid .bloc-card:nth-child(3){animation-delay:.15s}
   .cards-grid .bloc-card:nth-child(4){animation-delay:.20s}
   .cards-grid .bloc-card:nth-child(5){animation-delay:.25s}
+  .cards-grid .bloc-card:nth-child(6){animation-delay:.30s}
 
   @media (max-width:640px) {
     .cards-grid { grid-template-columns: 1fr; }
@@ -337,10 +343,10 @@
 <header class="hero">
   <p class="hero-eyebrow">GEI-UNIV · Préparation Concours</p>
   <h1>Fiches<br>de Révision</h1>
-  <p class="hero-sub">11 fiches auto-suffisantes · Zéro prérequis · Tous les contextes, pièges et hacks du concours</p>
+  <p class="hero-sub">11 fiches auto-suffisantes </p>
   <div class="hero-badges">
-    <span class="hero-badge" style="color:var(--m1);border-color:rgba(74,222,128,.3)">5 Blocs Mathématiques</span>
-    <span class="hero-badge" style="color:var(--p1);border-color:rgba(56,189,248,.3)">6 Blocs Physique</span>
+    <span class="hero-badge" style="color:var(--m1);border-color:rgba(74,222,128,.3)">6 Blocs Mathématiques</span>
+    <span class="hero-badge" style="color:var(--p1);border-color:rgba(56,189,248,.3)">5 Blocs Physique</span>
     <span class="hero-badge" style="color:var(--muted);border-color:var(--border)">22 fichiers HTML + MD</span>
   </div>
 </header>
@@ -351,7 +357,7 @@
   <section>
     <div class="section-intro">
       <h2 style="background:linear-gradient(90deg,#bbf7d0,#bfdbfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mathématiques</h2>
-      <span class="section-count">5 blocs · ~18 questions</span>
+      <span class="section-count">6 blocs · 20 questions</span>
     </div>
     <p class="section-desc">Les questions de mathématiques représentent la première moitié du concours. Chaque bloc a été calibré selon sa rentabilité réelle — du DL ultra-rapide aux séries, plus chronophages.</p>
 
@@ -363,7 +369,7 @@
           <div class="card-icon">📈</div>
           <div class="card-header-text">
             <div class="card-num">Bloc 1 · Maths</div>
-            <div class="card-title">Analyse, DL &amp; Fonctions à 2 Variables</div>
+            <div class="card-title">Analyse, DL &amp; Equation differentiel </div>
           </div>
         </div>
         <div class="card-body">
@@ -462,6 +468,27 @@
         </div>
       </a>
 
+      <!-- Bloc 5b — Équations Différentielles & Polynômes -->
+      <a class="bloc-card m6" href="Math/EquaDiff&Poly/EquaDif&Poly.html">
+        <div class="card-header">
+          <div class="card-icon">∂</div>
+          <div class="card-header-text">
+            <div class="card-num">Bloc 5b · Maths</div>
+            <div class="card-title">Équations Différentielles &amp; Polynômes</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">ED ordre 1 (hack sniper QCM), ED ordre 2 (3 cas Δ : apériodique, critique, oscillant), racines & multiplicité, formules de Viète, PGCD & Bézout.</div>
+          <div class="card-meta">
+            <span class="meta-pill meta-freq">0-2 questions</span>
+            <div class="meta-rent" title="Rentabilité très bonne">
+              <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star off">★</span>
+            </div>
+          </div>
+          <div class="strategy"><strong>Stratégie :</strong> Les 3 cas de l'équation caractéristique (Δ) tombent aussi en physique (RLC, oscillateurs). Double rentabilité. En QCM, tester les réponses proposées est 3× plus rapide que de résoudre.</div>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -471,7 +498,7 @@
   <section>
     <div class="section-intro">
       <h2 style="background:linear-gradient(90deg,#bae6fd,#a7f3d0,#ddd6fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Physique</h2>
-      <span class="section-count">6 blocs · ~20 questions (Q21–Q40)</span>
+      <span class="section-count">5 blocs · 20 questions (Q21–Q40)</span>
     </div>
     <p class="section-desc">Les questions de physique couvrent 5 grands blocs thématiques. Le concepteur assemble son épreuve en les combinant — commence toujours par Analyse dimentionelle et Unités pour les points gratuits.</p>
 
@@ -610,7 +637,7 @@
 </main>
 
 <footer>
-  GEI-UNIV · Arsenal de Révision · 11 blocs · 22 fichiers · Zéro Faille
+  GEI-UNIV · Fiches de Révision · 11 blocs · 11 fichiers 
 </footer>
 
 </body>

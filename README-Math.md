@@ -25,6 +25,10 @@
 * **Contenu :** Rayon de convergence, convergence simple vs uniforme, sommes de Riemann.
 * **Stratégie de révision :** **Le piège de révision par excellence.** Le volume de connaissances (tous les critères de convergence, topologie associée) est immense. Si tu as un temps de révision limité, assure uniquement les bases : le critère de D'Alembert et le calcul du rayon de convergence. Fais l'impasse sur la maîtrise parfaite de la convergence uniforme.
 
+### 6. Le bloc Équations Différentielles & Polynômes (Les "Sujets Rares")
+* **Taille :** 2 à 3 questions.
+* **Contenu :** Équadiff d'ordre 1 et 2, recherche de racines multiples, division euclidienne et PGCD.
+* **Stratégie de révision :** Approche "Sniper". Ne révise pas les méthodes de résolution lourdes (comme la variation de la constante). Le jour J, teste directement les propositions du QCM dans l'équation différentielle. Pour les polynômes, dégaine le calcul de la dérivée (P′) pour trouver les racines doubles sans effort. Investissement en temps très faible pour un sauvetage de points maximum.
 ---
 
 ## 📊 Analyse du Rendement (Points / Temps de Révision)
@@ -34,5 +38,6 @@
 | **1. Analyse de base / DL** | 2-3 Q | Très Faible | ⭐⭐⭐⭐⭐ (Maximale) |
 | **2. Probabilités / Bayes** | 3-5 Q | Faible | ⭐⭐⭐⭐⭐ (Excellente) |
 | **3. Extrema (Hessien) & Géométrie** | ~2 Q | Faible | ⭐⭐⭐⭐ (Très Bonne) |
+| **6. Équations différentielles & Polynômes** |   1–2 Q   |          Faible          | ⭐⭐⭐⭐ (Très Bonne — méthode “sniper”, points rapides en testant les réponses) |
 | **4. Algèbre Linéaire** | ~3 Q | Moyen | ⭐⭐⭐ (Bonne) |
 | **5. Séries (tous types)** | 4-6 Q | Énorme | ⭐ (Très Faible - sauf bases) |

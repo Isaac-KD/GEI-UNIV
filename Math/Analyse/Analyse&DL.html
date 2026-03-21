@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BLOC 1 — Analyse, Développements Limités & Fonctions à 2 Variables</title>
+<title>BLOC 1 — Analyse & Développements Limités</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
@@ -184,13 +184,12 @@
     }
   </style>
   <div class="bloc-tag">Bloc 1 · Mathématiques · Auto-suffisant</div><span class="version-badge">Boss Final</span>
-  <h1>Analyse, Développements Limités &amp; Fonctions à 2 Variables</h1>
+  <h1>Analyse &amp; Développements Limités  </h1>
   <div class="toc">
     <span class="toc-chip" style="color:var(--c1);border-color:rgba(74,222,128,.3)">01 · DL Usuels en 0</span>
     <span class="toc-chip" style="color:var(--c2);border-color:rgba(245,158,11,.35)">02 · Hack Tangente &amp; Asymptote</span>
     <span class="toc-chip" style="color:var(--c3);border-color:rgba(96,165,250,.35)">03 · Hack des Limites</span>
     <span class="toc-chip" style="color:var(--c4);border-color:rgba(232,121,249,.35)">04 · Convexité &amp; Dérivabilité</span>
-    <span class="toc-chip" style="color:var(--c5);border-color:rgba(248,113,113,.35)">05 · Fonctions à 2 Variables</span>
   </div>
 </header>
 
@@ -417,100 +416,6 @@
       <p style="text-align:center;margin:.5rem 0">\[\frac{f(x) - f(0)}{x - 0} = \frac{x^2 \sin(1/x)}{x} = x\sin(1/x)\]</p>
       <p>Le sinus est <strong>borné</strong> (entre \(-1\) et \(1\)) et \(x \to 0\). Donc \(x \cdot \text{borné} \to 0\).</p>
       <p><strong>→ \(f\) EST dérivable en 0 et \(f'(0) = 0\).</strong> La dérivée existe même si elle n'est pas continue !</p>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ════════════════ 05 ════════════════ -->
-<div class="section s5">
-  <div class="section-header"><span class="num">05</span><h2 style="color:var(--c5)">Fonctions à 2 Variables — Le Boss Final</h2><span class="icon">🗻</span></div>
-  <div class="section-body">
-
-    <div class="ctx">
-      <p>Le GEI-UNIV pose <strong>chaque année</strong> un exercice sur la recherche des extrema locaux d'une fonction \(f(x,y)\) (tombé en <strong>2019 Q18, 2020 Q20, 2022 Q4, 2025 Q9</strong>). La méthode est toujours la même : gradient nul → Hessienne.</p>
-      <p>Le point clé : un <strong>point critique</strong> (gradient nul) n'est pas forcément un extremum — il peut aussi être un <em>point col</em> (ou point selle), qui ressemble à une montagne dans une direction et une vallée dans une autre.</p>
-    </div>
-
-    <div class="eq-block">
-      <div class="block-title">Méthode Hessienne (Notations de Monge) — 3 étapes</div>
-
-      <div class="hess-steps">
-
-        <div class="hess-step">
-          <div class="hess-num">1</div>
-          <div class="hess-content">
-            <div class="hess-label">Trouver les points critiques — Annuler le gradient</div>
-            <div class="eq">\(\dfrac{\partial f}{\partial x} = 0 \quad \textbf{ET} \quad \dfrac{\partial f}{\partial y} = 0\)</div>
-            <div class="annot">Résoudre le système simultané. Les solutions \((x_0, y_0)\) sont les candidats à être des extrema. Les deux conditions doivent être satisfaites <em>ensemble</em>.</div>
-          </div>
-        </div>
-
-        <div class="hess-step">
-          <div class="hess-num">2</div>
-          <div class="hess-content">
-            <div class="hess-label">Calculer les dérivées secondes en ce point</div>
-            <div class="def-grid">
-              <span class="def-term">r</span><span class="def-desc">\(r = \dfrac{\partial^2 f}{\partial x^2}\Big|_{(x_0,y_0)}\)</span>
-              <span class="def-term">t</span><span class="def-desc">\(t = \dfrac{\partial^2 f}{\partial y^2}\Big|_{(x_0,y_0)}\)</span>
-              <span class="def-term">s</span><span class="def-desc">\(s = \dfrac{\partial^2 f}{\partial x \partial y}\Big|_{(x_0,y_0)}\)</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="hess-step">
-          <div class="hess-num">3</div>
-          <div class="hess-content">
-            <div class="hess-label">Calculer le discriminant Δ = rt − s² et conclure</div>
-            <div class="eq hl">\(\Delta = r \cdot t - s^2\)</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="eq-block">
-      <div class="block-title">Tableau de décision selon Δ</div>
-      <div class="delta-tree">
-
-        <div class="delta-case dc-neg">
-          <span class="dc-badge">Δ &lt; 0</span>
-          <div class="dc-body">
-            <strong>Point Col</strong> (ou point selle) → <strong>pas d'extremum.</strong><br>
-            La fonction monte dans une direction et descend dans l'autre. Comme un col de montagne.
-          </div>
-        </div>
-
-        <div class="delta-case dc-pos">
-          <span class="dc-badge">Δ &gt; 0</span>
-          <div class="dc-body">
-            <strong>Extremum local</strong> → regarder le signe de \(r\) pour distinguer :
-            <div class="dc-sub">
-              <span>Si \(r > 0\) → <strong>Minimum local</strong> (la surface "sourit" dans les deux directions).</span>
-              <span>Si \(r < 0\) → <strong>Maximum local</strong> (la surface "pleure" dans les deux directions).</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="delta-case dc-zero">
-          <span class="dc-badge">Δ = 0</span>
-          <div class="dc-body">
-            <strong>Cas douteux</strong> — on ne peut pas conclure avec cette méthode. Très rare au concours : si tu obtiens \(\Delta = 0\), vérifie ton calcul d'abord.
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="concours">
-      <div class="concours-title">★ Résumé stratégique — Ce que le concours attend</div>
-      <ul>
-        <li>Calculer proprement \(\partial f/\partial x\) et \(\partial f/\partial y\) et résoudre le système.</li>
-        <li>Calculer \(r\), \(s\), \(t\) et \(\Delta = rt - s^2\) au point critique.</li>
-        <li>Conclure : col si \(\Delta < 0\), extremum si \(\Delta > 0\) (puis signe de \(r\)).</li>
-        <li>Ne pas oublier que <strong>plusieurs points critiques</strong> sont possibles — tester chacun séparément.</li>
-      </ul>
     </div>
 
   </div>
