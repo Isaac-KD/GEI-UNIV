@@ -1,7 +1,3 @@
-Si on se base sur l'ingénierie des sujets récents (comme 2023 et 2025), le concepteur construit son épreuve de Physique (Questions 21 à 40) en assemblant **5 grands blocs thématiques**. 
-
-Voici la "carte mentale" de l'épreuve :
-
 ### 1. Le "Sas d'entrée" (Analyse dimensionnelle et Unités)
 * **Taille :** 1 à 2 questions (généralement Q21 / Q22).
 * **Ce qu'on y trouve :** Retrouver la dimension d'une constante ($h$, $R$, $\epsilon_0$), vérifier l'homogénéité d'une formule, ou repérer une unité du système international fausse.
